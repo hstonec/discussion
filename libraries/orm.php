@@ -204,6 +204,30 @@ class UserDAO {
                        $row["photo_url"],
                        $userID);
     }
+    public function getUserByUP($username, $password) {
+        if (gettype($username) != "string" || gettype($password) != "string")
+            return "Wrong argument type!";
+        $sql = "select ".
+               "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
+               "from user ".
+               "where username = '".$username."' and password = '".$password."'";
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $role = $this->roleDAO->getRoleByID($row["id_role"]);
+        $department = $this->departmentDAO->getDepartmentByID($row["id_department"]);
+        return new User($role,
+                       $department,
+                       $row["username"],
+                       $row["password"],
+                       $row["first_name"],
+                       $row["last_name"],
+                       $row["gender"],
+                       $row["photo_url"],
+                       $row["id_user"]);
+    }
+    
 }
 class User {
     private $userID;
@@ -235,7 +259,58 @@ class User {
         $this->photoURL = $photoURL;
         $this->userID = $userID;
     }
+    public function getUserID() {
+        return $this->userID;
+    }
+    public function getRole() {
+        return $this->role;
+    }
+    public function getDepartment() {
+        return $this->department;
+    }
+    public function getUsername() {
+        return $this->username;
+    }
+    public function getPassword() {
+        return $this->password;
+    }
+    public function getFirstName() {
+        return $this->firstName;
+    }
+    public function getLastName() {
+        return $this->lastName;
+    }
+    public function getGender() {
+        return $this->gender;
+    }
+    public function getPhotoURL() {
+        return $this->photoURL;
+    }
     
+    public function setRole($role) {
+        $this->role = $role;
+    }
+    public function setDepartment($department) {
+        $this->department = $department;
+    }
+    public function setUsername($username) {
+        $this->username = $username;
+    }
+    public function setPassword($password) {
+        $this->password = $password;
+    }
+    public function setFirstName($firstName) {
+        $this->firstName = $firstName;
+    }
+    public function setLastName($lastName) {
+        $this->lastName = $lastName;
+    }
+    public function setGender($gender) {
+        $this->gender = $gender;
+    }
+    public function setPhotoURL($photoURL) {
+        $this->photoURL = $photoURL;
+    }
 }
 
 class GroupDAO {
@@ -288,9 +363,6 @@ class Group {
     }
     public function getActivateStatus() {
         return $this->activateStatus;
-    }
-    public function setGroupID($groupID) {
-        $this->groupID = $groupID;
     }
     public function setOwner($owner) {
         $this->owner = $owner;
@@ -352,7 +424,29 @@ class GroupMember {
 }
 
 class RecordDAO {
+    private $db;
     
+    public function __construct() {
+        $this->db = new databse();
+        $this->db->connect();
+    }
+    public function __destruct() {
+        $this->db->disconnect();
+    }
+    
+    public function insertRecord($record) {
+        if (gettype($record) != "object")
+            return "Wrong argument type!";
+        $sql = "insert into record ".
+               "(id_group, id_user, message_type, content, time, display_status) ".
+               "values (".
+                   $record->getGroup()->getGroupID().", ".
+                   $record->getUser()->getUserID().", ".
+                   $record->getMessageType().", ".
+                   "'".$record->getContent()."', ".
+                   "'".$record->getTime()."', ".
+                   $record->getDisplayStatus().")";
+    }
 }
 class Record {
     private $recordID;
@@ -362,8 +456,55 @@ class Record {
     private $content;
     private $time;
     private $displayStatus;
-    public function __construct() {
-        
+    public function __construct($group, $user, $messageType, $content, $time, $displayStatus, $recordID = null) {
+        $this->group = $group;
+        $this->user = $user;
+        $this->messageType = $messageType;
+        $this->content = $content;
+        $this->time = $time;
+        $this->displayStatus = $displayStatus;
+        $this->recordID = $recordID;
+    }
+    
+    public function getRecordID() {
+        return $this->recordID;
+    }
+    public function getGroup() {
+        return $this->group;
+    }
+    public function getUser() {
+        return $this->user;
+    }
+    public function getMessageType() {
+        return $this->messageType;
+    }
+    public function getContent() {
+        return $this->content;
+    }
+    public function getTime() {
+        return $this->time;
+    }
+    public function getDisplayStatus() {
+        return $this->displayStatus;
+    }
+    
+    public function setGroup($group) {
+        $this->group = $group;
+    }
+    public function setUser($user) {
+        $this->user = $user;
+    }
+    public function setMessageType($messageType) {
+        $this->messageType = $messageType;
+    }
+    public function setContent($content) {
+        $this->content = $content;
+    }
+    public function setTime($time) {
+        $this->time = $time;
+    }
+    public function setDisplayStatus($displayStatus) {
+        $this->displayStatus = $displayStatus;
     }
 }
 ?>
