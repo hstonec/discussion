@@ -3,19 +3,16 @@
 <title>Login Main Page</title>
 </head>
 <body>
-<form action ="" method = "get">
+<p>{LOGIN_ERROR}</p>
+<form action = "login.php" method = "post">
 Please enter the user name and user password:<br>
 User name:
-<input name = "username" type = "text " placeholder = "user name"
-size = "10" value = "" required />
-<br>
+    <input name = "username" type = "text" placeholder = "user name"
+size = "10" /><br>
 User password:
-<input name = "userpassword" type = "text " placeholder = "user password"
-size = "10" value = "" required />
-<br>
-<input type = "submit" value = "Login"/>
-
-
-
+    <input name = "password" type = "password" placeholder = "user password"
+size = "10" /><br>
+    <input type = "submit" value = "Login"/>
+</form>
 </body>
 </html>

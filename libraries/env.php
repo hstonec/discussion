@@ -26,6 +26,7 @@ function forward($relPath) {
     $appRootURL .= pathinfo($_SERVER["PHP_SELF"])["dirname"]."/";
     $newURL = $appRootURL.$relPath;
     header("Location: ".$newURL);
+    exit;
 }
 
 ?>

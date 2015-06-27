@@ -93,6 +93,7 @@ class DepartmentDAO {
                           $department->getParent()->getDepartmentID().", ".
                         "'".$department->getDepartmentName()."')";
         $this->db->send_sql($sql);
+        $department->setDepartmentID($this->db->insert_id());
         return true;
     }
     public function getDepartmentByID($departmentID) {
@@ -129,6 +130,13 @@ class Department {
         $this->departmentName = $departmentName;
         $this->departmentID = $departmentID;
     }
+    
+    public function setDepartmentID($departmentID) {
+        $this->departmentID = $departmentID;
+    }
+    public function setParent($parentDepartment) {
+        $this->parentDepartment = $parentDepartment;
+    }
     public function setDepartmentName($departmentName) {
         $this->departmentName = $departmentName;
     }
@@ -141,9 +149,7 @@ class Department {
     public function getParent() {
         return $this->parentDepartment;
     }
-    public function setParent($parentDepartment) {
-        $this->parentDepartment = $parentDepartment;
-    }
+    
 }
 
 class UserDAO {
@@ -182,8 +188,7 @@ class UserDAO {
         return true;
     }
     public function getUserByID($userID) {
-        if (!is_int($userID))
-            return "Wrong argument type!";
+        $userID = (int)$userID;
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
@@ -287,6 +292,9 @@ class User {
         return $this->photoURL;
     }
     
+    public function setUserID($userID) {
+        $this->userID = $userID;
+    }
     public function setRole($role) {
         $this->role = $role;
     }
@@ -363,6 +371,10 @@ class Group {
     }
     public function getActivateStatus() {
         return $this->activateStatus;
+    }
+    
+    public function setGroupID($groupID) {
+        $this->groupID = $groupID;
     }
     public function setOwner($owner) {
         $this->owner = $owner;
@@ -446,6 +458,9 @@ class RecordDAO {
                    "'".$record->getContent()."', ".
                    "'".$record->getTime()."', ".
                    $record->getDisplayStatus().")";
+        $this->db->send_sql($sql);
+        $record->setRecordID($this->db->insert_id());
+        return true;
     }
 }
 class Record {
@@ -488,6 +503,9 @@ class Record {
         return $this->displayStatus;
     }
     
+    public function setRecordID($recordID) {
+        $this->recordID = $recordID;
+    }
     public function setGroup($group) {
         $this->group = $group;
     }
