@@ -5,7 +5,7 @@ class RoleDAO {
     private $db;
     
     public function __construct() {
-        $this->db = new databse();
+        $this->db = new database();
         $this->db->connect();
     }
     public function __destruct() {
@@ -15,7 +15,7 @@ class RoleDAO {
     public function insertRole($role) {
         if (gettype($role) != "object")
             return "Wrong argument type!";
-        $sql = "insert into role (id_role, role_name) ".
+        $sql = "insert into t_role (id_role, role_name) ".
                "values (".$role->getRoleID().", '".$role->getRoleName()."')";
         $this->db->send_sql($sql);
         return true;
@@ -23,7 +23,7 @@ class RoleDAO {
     public function getRoleByID($roleID) {
         if (!is_int($roleID))
             return "Wrong argument type!";
-        $sql = "select id_role, role_name from role where id_role = ".$roleID;
+        $sql = "select id_role, role_name from t_role where id_role = ".$roleID;
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -31,7 +31,7 @@ class RoleDAO {
         return new Role($row["id_role"], $row["role_name"]);
     }
     public function getRoles() {
-        $sql = "select id_role, role_name from role";
+        $sql = "select id_role, role_name from t_role";
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -46,7 +46,7 @@ class RoleDAO {
     public function updateRole($role) {
         if (gettype($role) != "object")
             return "Wrong argument type!";
-        $sql = "update role ".
+        $sql = "update t_role ".
                "set role_name = '".$role->getRoleName()."' ".
                "where id_role = ".$role->getRoleID();
         $this->db->send_sql($sql);
@@ -77,7 +77,7 @@ class DepartmentDAO {
     private $cache;
     
     public function __construct() {
-        $this->db = new databse();
+        $this->db = new database();
         $this->db->connect();
         $cache = array();
     }
@@ -88,7 +88,7 @@ class DepartmentDAO {
     public function insertDepartment($department) {
         if (gettype($department) != "object")
             return "Wrong argument type!";
-        $sql = "insert into department (id_department, id_parent, department_name) ".
+        $sql = "insert into t_department (id_department, id_parent, department_name) ".
                "values (".$department->getDepartmentID().", ".
                           $department->getParent()->getDepartmentID().", ".
                         "'".$department->getDepartmentName()."')";
@@ -103,7 +103,7 @@ class DepartmentDAO {
             return $this->cache[$departmentID];
         
         $sql = "select id_department, id_parent, department_name ".
-               "from department ".
+               "from t_department ".
                "where id_department = ".$departmentID;
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
@@ -152,7 +152,7 @@ class UserDAO {
     private $departmentDAO;
     
     public function __construct() {
-        $this->db = new databse();
+        $this->db = new database();
         $this->db->connect();
         
         $this->roleDAO = new RoleDAO();
@@ -165,7 +165,7 @@ class UserDAO {
     public function insertUser($user) {
         if (gettype($user) != "object")
             return "Wrong argument type!";
-        $sql = "insert into user ".
+        $sql = "insert into t_user ".
                "(id_role, id_department, username, password, first_name, last_name, gender, photo_url) ".
                "values (".
                    $user->getRole()->getRoleID().", ".
@@ -186,7 +186,7 @@ class UserDAO {
             return "Wrong argument type!";
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
-               "from user ".
+               "from t_user ".
                "where id_user = ".$userID;
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
@@ -209,7 +209,7 @@ class UserDAO {
             return "Wrong argument type!";
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
-               "from user ".
+               "from t_user ".
                "where username = '".$username."' and password = '".$password."'";
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
@@ -319,7 +319,7 @@ class GroupDAO {
     
     public function __construct() {
         $this->userDAO = new UserDAO();
-        $this->db = new databse();
+        $this->db = new database();
         $this->db->connect();
     }
     public function __destruct() {
@@ -329,7 +329,7 @@ class GroupDAO {
     public function insertGroup($group) {
         if (gettype($group) != "object")
             return "Wrong argument type!";
-        $sql = "insert into group ".
+        $sql = "insert into t_group ".
                "(id_owner, group_name, activate_status) ".
                "values (".
                    $group->getOwner()->getUserID().", ".
@@ -379,7 +379,7 @@ class GroupMemberDAO {
     private $db;
     
     public function __construct() {
-        $this->db = new databse();
+        $this->db = new database();
         $this->db->connect();
     }
     public function __destruct() {
@@ -389,7 +389,7 @@ class GroupMemberDAO {
     public function insertGroupMember($groupMember) {
         if (gettype($groupMember) != "object")
             return "Wrong argument type!";
-        $sql = "insert into group_member ".
+        $sql = "insert into t_group_member ".
                "(id_group, id_user, accept_status) ".
                "values (".
                    $groupMember->getGroup()->getGroupID().", ".
@@ -427,7 +427,7 @@ class RecordDAO {
     private $db;
     
     public function __construct() {
-        $this->db = new databse();
+        $this->db = new database();
         $this->db->connect();
     }
     public function __destruct() {
@@ -437,7 +437,7 @@ class RecordDAO {
     public function insertRecord($record) {
         if (gettype($record) != "object")
             return "Wrong argument type!";
-        $sql = "insert into record ".
+        $sql = "insert into t_record ".
                "(id_group, id_user, message_type, content, time, display_status) ".
                "values (".
                    $record->getGroup()->getGroupID().", ".
@@ -507,4 +507,5 @@ class Record {
         $this->displayStatus = $displayStatus;
     }
 }
+
 ?>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.8
+-- version 4.4.7
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 27, 2015 at 04:14 AM
--- Server version: 5.6.25-log
--- PHP Version: 5.6.9
+-- Generation Time: Jun 27, 2015 at 09:08 PM
+-- Server version: 5.6.24
+-- PHP Version: 5.5.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -148,7 +148,8 @@ ALTER TABLE `t_role`
 ALTER TABLE `t_user`
   ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `index_username` (`username`) USING BTREE,
-  ADD KEY `index_id_role` (`id_role`) USING BTREE;
+  ADD KEY `index_id_role` (`id_role`) USING BTREE,
+  ADD KEY `index_id_department` (`id_department`) USING BTREE;
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -200,6 +201,7 @@ ALTER TABLE `t_group_member`
 -- Constraints for table `t_user`
 --
 ALTER TABLE `t_user`
+  ADD CONSTRAINT `fk_id_department` FOREIGN KEY (`id_department`) REFERENCES `t_department` (`id_department`),
   ADD CONSTRAINT `fk_id_role` FOREIGN KEY (`id_role`) REFERENCES `t_role` (`id_role`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
