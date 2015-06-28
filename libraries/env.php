@@ -20,13 +20,36 @@ function forward($relPath) {
         echo "ERROR: forward() only accepts String!";
         exit;
     }
+    
+    $baseURL = pathinfo($_SERVER["PHP_SELF"])["dirname"];
+    while (true) {
+        if (strpos($relPath, "./") === 0)
+            $relPath = substr($relPath, 2);
+        elseif (strpos($relPath, "../") === 0) {
+            $baseURL = pathinfo($baseURL)["dirname"];
+            $relPath = substr($relPath, 3);
+        } elseif (strpos($relPath, "/") === 0) {
+            echo "ERROR: forward() only accepts relative path!";
+            exit;
+        } else
+            break;
+    }
+    
     $appRootURL = "http://".$_SERVER["HTTP_HOST"];
     if ($_SERVER["SERVER_PORT"] !== "80")
         $appRootURL .= ":".$_SERVER["SERVER_PORT"];
-    $appRootURL .= pathinfo($_SERVER["PHP_SELF"])["dirname"]."/";
-    $newURL = $appRootURL.$relPath;
+    
+    $newURL = $appRootURL.$baseURL."/".$relPath;
     header("Location: ".$newURL);
     exit;
 }
-
+function sendAjaxRes($jsonArray) {
+    if (gettype($jsonArray) != "array" || count($jsonArray) === 0) {
+        echo "ERROR: Argument of sendAjaxRes() isn't an Array or is empty!";
+        exit;
+    }
+    header("Content-type: application/json");
+    echo json_encode($jsonArray);
+    exit;
+}
 ?>

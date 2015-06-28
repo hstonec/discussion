@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 28, 2015 at 04:26 AM
+-- Generation Time: Jun 28, 2015 at 05:49 PM
 -- Server version: 5.6.25-log
 -- PHP Version: 5.6.9
 
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `t_user` (
   `last_name` varchar(100) NOT NULL,
   `gender` int(11) NOT NULL,
   `photo_url` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -196,7 +196,7 @@ ALTER TABLE `t_role`
 -- AUTO_INCREMENT for table `t_user`
 --
 ALTER TABLE `t_user`
-  MODIFY `id_user` int(10) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- Constraints for dumped tables
 --

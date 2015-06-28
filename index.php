@@ -4,8 +4,19 @@ require_once("libraries/head.php");
 if (!isLogin())
     forward("login.php");
 
-$userDAO = new UserDAO();
-$user = $userDAO->getUserByID($_SESSION["userID"]);
+displayIndex();
 
-echo "Welcome, ".$user->getFirstName();
+function displayIndex() {
+    $tpl = new FastTemplate("templates/");
+    $tpl->define(array("main" => "index/main.html"));
+    
+    $userDAO = new UserDAO();
+    $user = $userDAO->getUserByID($_SESSION["userID"]);
+    $tpl->assign("INDEX_FIRST", $user->getFirstName());
+    
+    $tpl->parse("MAIN", "main");
+    $tpl->FastPrint();
+    
+}
+
 ?>
