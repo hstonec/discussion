@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `t_department` (
 --
 
 INSERT INTO `t_department` (`id_department`, `id_parent`, `department_name`) VALUES
-(1, 0, 'Root');
+(0, 0, 'Root');
 
 -- --------------------------------------------------------
 
