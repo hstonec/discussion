@@ -13,16 +13,20 @@ class RoleDAO {
     }
     
     public function insertRole($role) {
-        if (gettype($role) != "object")
-            return "Wrong argument type!";
+        if (gettype($role) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "insert into t_role (id_role, role_name) ".
                "values (".$role->getRoleID().", '".$role->getRoleName()."')";
         $this->db->send_sql($sql);
         return true;
     }
     public function getRoleByID($roleID) {
-        if (!is_int($roleID))
-            return "Wrong argument type!";
+        if (!is_int($roleID)) { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "select id_role, role_name from t_role where id_role = ".$roleID;
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
@@ -44,8 +48,10 @@ class RoleDAO {
         return $arr;
     }
     public function updateRole($role) {
-        if (gettype($role) != "object")
-            return "Wrong argument type!";
+        if (gettype($role) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "update t_role ".
                "set role_name = '".$role->getRoleName()."' ".
                "where id_role = ".$role->getRoleID();
@@ -86,8 +92,10 @@ class DepartmentDAO {
     }
     
     public function insertDepartment($department) {
-        if (gettype($department) != "object")
-            return "Wrong argument type!";
+        if (gettype($department) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "insert into t_department (id_department, id_parent, department_name) ".
                "values (".$department->getDepartmentID().", ".
                           $department->getParent()->getDepartmentID().", ".
@@ -97,9 +105,10 @@ class DepartmentDAO {
         return true;
     }
     public function getDepartmentByID($departmentID) {
-        if (!is_int($departmentID))
-            return "Wrong argument type!";
-        
+        if (!is_int($departmentID)) { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         if (isset($this->cache[$departmentID]))
             return $this->cache[$departmentID];
         
@@ -118,6 +127,26 @@ class DepartmentDAO {
         
         $this->cache[$departmentID] = new Department($par, $row["department_name"], $row["id_department"]);
         return $this->cache[$departmentID];
+    }
+    public function getChildDepartments($department) {
+        if (gettype($department) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $parentID = $department->getDepartmentID();
+        $sql = "select id_department, id_parent, department_name ".
+               "from t_department ".
+               "where id_parent = ".$parentID;
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $childArray = array();
+        $childArray[] = $this->getDepartmentByID($row["id_department"]);
+        while ($row = $this->db->next_row()) {
+            $childArray[] = $this->getDepartmentByID($row["id_department"]);
+        }
+        return $childArray;
     }
 }
 class Department {
@@ -169,8 +198,10 @@ class UserDAO {
     }
     
     public function insertUser($user) {
-        if (gettype($user) != "object")
-            return "Wrong argument type!";
+        if (gettype($user) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "insert into t_user ".
                "(id_role, id_department, username, password, first_name, last_name, gender, photo_url) ".
                "values (".
@@ -210,8 +241,10 @@ class UserDAO {
                        $userID);
     }
     public function getUserByUP($username, $password) {
-        if (gettype($username) != "string" || gettype($password) != "string")
-            return "Wrong argument type!";
+        if (gettype($username) != "string" || gettype($password) != "string") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
@@ -232,7 +265,23 @@ class UserDAO {
                        $row["photo_url"],
                        $row["id_user"]);
     }
-    
+    public function updateUser($user) {
+        if (gettype($user) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "update t_user ".
+        "set id_role = ".$user->getRole()->getRoleID().", ".
+            "id_department = ".$user->getDepartment()->getDepartmentID().", ".
+            "password = '".$user->getPassword()."', ".
+            "first_name = '".$user->getFirstName()."', ".
+            "last_name = '".$user->getLastName()."', ".
+            "gender = ".$user->getGender().", ".
+            "photo_url = '".$user->getPhotoURL()."' ".
+        "where id_user = ".$user->getUserID();
+        $this->db->send_sql($sql);
+        return true;
+    }
 }
 class User {
     private $userID;
@@ -335,8 +384,10 @@ class GroupDAO {
     }
     
     public function insertGroup($group) {
-        if (gettype($group) != "object")
-            return "Wrong argument type!";
+        if (gettype($group) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "insert into t_group ".
                "(id_owner, group_name, activate_status) ".
                "values (".
@@ -399,8 +450,10 @@ class GroupMemberDAO {
     }
     
     public function insertGroupMember($groupMember) {
-        if (gettype($groupMember) != "object")
-            return "Wrong argument type!";
+        if (gettype($groupMember) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "insert into t_group_member ".
                "(id_group, id_user, accept_status) ".
                "values (".
@@ -447,8 +500,10 @@ class RecordDAO {
     }
     
     public function insertRecord($record) {
-        if (gettype($record) != "object")
-            return "Wrong argument type!";
+        if (gettype($record) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
         $sql = "insert into t_record ".
                "(id_group, id_user, message_type, content, time, display_status) ".
                "values (".
