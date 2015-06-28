@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `t_role` (
 --
 
 INSERT INTO `t_role` (`id_role`, `role_name`) VALUES
+(0, 'Forbiden'),
 (1, 'Root'),
 (2, 'Administrator'),
 (3, 'User');
