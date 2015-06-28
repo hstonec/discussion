@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.7
+-- version 4.4.8
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 27, 2015 at 09:08 PM
--- Server version: 5.6.24
--- PHP Version: 5.5.20
+-- Generation Time: Jun 28, 2015 at 04:26 AM
+-- Server version: 5.6.25-log
+-- PHP Version: 5.6.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -32,7 +32,14 @@ CREATE TABLE IF NOT EXISTS `t_department` (
   `id_department` int(10) unsigned NOT NULL,
   `id_parent` int(10) unsigned NOT NULL,
   `department_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `t_department`
+--
+
+INSERT INTO `t_department` (`id_department`, `id_parent`, `department_name`) VALUES
+(1, 0, 'Root');
 
 -- --------------------------------------------------------
 
@@ -84,7 +91,16 @@ CREATE TABLE IF NOT EXISTS `t_record` (
 CREATE TABLE IF NOT EXISTS `t_role` (
   `id_role` int(10) unsigned NOT NULL,
   `role_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `t_role`
+--
+
+INSERT INTO `t_role` (`id_role`, `role_name`) VALUES
+(1, 'Root'),
+(2, 'Administrator'),
+(3, 'User');
 
 -- --------------------------------------------------------
 
@@ -126,7 +142,8 @@ ALTER TABLE `t_group`
 --
 ALTER TABLE `t_group_member`
   ADD PRIMARY KEY (`id_group`,`id_user`),
-  ADD KEY `fk_id_user` (`id_user`);
+  ADD UNIQUE KEY `index_id_group` (`id_group`),
+  ADD KEY `index_id_user` (`id_user`) USING BTREE;
 
 --
 -- Indexes for table `t_record`
@@ -159,7 +176,7 @@ ALTER TABLE `t_user`
 -- AUTO_INCREMENT for table `t_department`
 --
 ALTER TABLE `t_department`
-  MODIFY `id_department` int(10) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `id_department` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `t_group`
 --
@@ -174,7 +191,7 @@ ALTER TABLE `t_record`
 -- AUTO_INCREMENT for table `t_role`
 --
 ALTER TABLE `t_role`
-  MODIFY `id_role` int(10) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `id_role` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `t_user`
 --
