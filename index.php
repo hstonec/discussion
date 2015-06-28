@@ -19,4 +19,9 @@ function displayIndex() {
     
 }
 
+function getDepartments() {
+    $deptDAO = new DepartmentDAO();
+    
+}
+
 ?>
