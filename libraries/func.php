@@ -1,5 +1,6 @@
 <?php
 
+
 function isValidUsername($username) {
     if (strlen($username) < 6 ||
         strlen($username) > 20 ||
