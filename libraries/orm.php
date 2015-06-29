@@ -76,12 +76,10 @@ class Role {
 
 class DepartmentDAO {
     private $db;
-    private $cache;
     
     public function __construct() {
         $this->db = new database();
         $this->db->connect();
-        $cache = array();
     }
     public function __destruct() {
         $this->db->disconnect();
@@ -94,10 +92,21 @@ class DepartmentDAO {
         }
         $sql = "insert into t_department (id_department, id_parent, department_name) ".
                "values (".$department->getDepartmentID().", ".
-                          $department->getParent()->getDepartmentID().", ".
+                          $department->getParentID().", ".
                         "'".$department->getDepartmentName()."')";
         $this->db->send_sql($sql);
         $department->setDepartmentID($this->db->insert_id());
+        return true;
+    }
+    public function updateDepartment($department) {
+        if (gettype($department) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "update t_department ".
+               "set id_parent = ".$department->getParentID().
+                   "department_name = '".$department->getDepartmentName()."'";
+        $this->db->send_sql($sql);
         return true;
     }
     public function getDepartmentByID($departmentID) {
@@ -111,14 +120,11 @@ class DepartmentDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        
-        if ($row["id_department"] === $row["id_parent"])
-            $par = null;
-        else
-            $par = $this->getDepartmentByID($row["id_department"]);
-        
-        $this->cache[$departmentID] = new Department($par, $row["department_name"], $row["id_department"]);
-        return $this->cache[$departmentID];
+        return new Department(
+            $row["id_parent"], 
+            $row["department_name"], 
+            $row["id_department"]
+        );
     }
     public function getChildDepartments($department) {
         if (gettype($department) != "object") { 
@@ -134,20 +140,27 @@ class DepartmentDAO {
         if ($row === null)
             return null;
         $childArray = array();
-        $childArray[] = $this->getDepartmentByID($row["id_department"]);
+        $childArray[] = new Department(
+            $row["id_parent"],
+            $row["department_name"],
+            $row["id_department"]);
         while ($row = $this->db->next_row()) {
-            $childArray[] = $this->getDepartmentByID($row["id_department"]);
+            $childArray[] = new Department(
+                $row["id_parent"],
+                $row["department_name"],
+                $row["id_department"]
+            );
         }
         return $childArray;
     }
 }
 class Department {
     private $departmentID;
-    private $parentDepartment;
+    private $parentID;
     private $departmentName;
     
-    public function __construct($parentDepartment, $departmentName, $departmentID = null) {
-        $this->parentDepartment = $parentDepartment;
+    public function __construct($parentID, $departmentName, $departmentID = null) {
+        $this->parentID = $parentID;
         $this->departmentName = $departmentName;
         $this->departmentID = $departmentID;
     }
@@ -155,8 +168,8 @@ class Department {
     public function setDepartmentID($departmentID) {
         $this->departmentID = $departmentID;
     }
-    public function setParent($parentDepartment) {
-        $this->parentDepartment = $parentDepartment;
+    public function setParentID($parentID) {
+        $this->parentID = $parentID;
     }
     public function setDepartmentName($departmentName) {
         $this->departmentName = $departmentName;
@@ -167,8 +180,8 @@ class Department {
     public function getDepartmentID() {
         return $this->departmentID;
     }
-    public function getParent() {
-        return $this->parentDepartment;
+    public function getParentID() {
+        return $this->parentID;
     }
     
 }
@@ -231,6 +244,27 @@ class UserDAO {
                        $row["photo_url"],
                        $userID);
     }
+    public function getUserByUsername($username) {
+        $sql = "select ".
+               "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
+               "from t_user ".
+               "where username = '".$username."'";
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $role = $this->roleDAO->getRoleByID($row["id_role"]);
+        $department = $this->departmentDAO->getDepartmentByID($row["id_department"]);
+        return new User($role,
+                       $department,
+                       $row["username"],
+                       $row["password"],
+                       $row["first_name"],
+                       $row["last_name"],
+                       $row["gender"],
+                       $row["photo_url"],
+                       $row["id_user"]);
+    }
     public function getUserByUP($username, $password) {
         if (gettype($username) != "string" || gettype($password) != "string") { 
             echo "ERROR: Wrong argument type!"; 
@@ -255,6 +289,46 @@ class UserDAO {
                        $row["gender"],
                        $row["photo_url"],
                        $row["id_user"]);
+    }
+    public function getUsersByDepartment($department) {
+        if (gettype($department) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $sql = "select ".
+               "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
+               "from t_user ".
+               "where id_department = ".$department->getDepartmentID();
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $usersArr = array();
+        $role = $this->roleDAO->getRoleByID($row["id_role"]);
+        $department = $this->departmentDAO->getDepartmentByID($row["id_department"]);
+        $usersArr[] = new User($role,
+                               $department,
+                               $row["username"],
+                               $row["password"],
+                               $row["first_name"],
+                               $row["last_name"],
+                               $row["gender"],
+                               $row["photo_url"],
+                               $row["id_user"]);
+        while ($row = $this->db->next_row()) {
+            $role = $this->roleDAO->getRoleByID($row["id_role"]);
+            $department = $this->departmentDAO->getDepartmentByID($row["id_department"]);
+            $usersArr[] = new User($role,
+                                   $department,
+                                   $row["username"],
+                                   $row["password"],
+                                   $row["first_name"],
+                                   $row["last_name"],
+                                   $row["gender"],
+                                   $row["photo_url"],
+                                   $row["id_user"]);
+        }
+        return $usersArr;
     }
     public function updateUser($user) {
         if (gettype($user) != "object") { 
@@ -447,10 +521,12 @@ class Group {
 
 class GroupMemberDAO {
     private $db;
+    private $groupDAO;
     
     public function __construct() {
         $this->db = new database();
         $this->db->connect();
+        $this->groupDAO = new GroupDAO();
     }
     public function __destruct() {
         $this->db->disconnect();
@@ -490,6 +566,37 @@ class GroupMemberDAO {
             $user,
             $row["accept_status"]
         );
+    }
+    public function getGroupMembersByUser($user) {
+        if (gettype($user) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $userID = $user->getUserID();
+        $sql = "select id_group, id_user, accept_status ".
+               "from t_group_member ".
+               "where id_user = ".$userID;
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $group = $groupDAO->getGroupByID($row["id_group"]);
+        $gmArr = array();
+        $gmArr[] = new GroupMember(
+            $group,
+            $user,
+            $row["accept_status"]
+        );
+        while ($row = $this->db->next_row()) {
+            $group = $groupDAO->getGroupByID($row["id_group"]);
+            $gmArr = array();
+            $gmArr[] = new GroupMember(
+                $group,
+                $user,
+                $row["accept_status"]
+            );
+        }
+        return $gmArr;
     }
 }
 class GroupMember {

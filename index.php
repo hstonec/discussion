@@ -8,11 +8,67 @@ displayIndex();
 
 function displayIndex() {
     $tpl = new FastTemplate("templates/");
-    $tpl->define(array("main" => "index/main.html"));
-    
+    $tpl->define(array("main" => "index/main.html",
+                       "rootul" => "index/rootul.html",
+                       "li" => "index/li.html",
+                       "liul" => "index/liul.html",
+                       "groupul" => "index/groupul.html",
+                       "groupli" => "index/groupli.html",
+                       "grouptab" => "index/grouptab.html"));
     $userDAO = new UserDAO();
-    $user = $userDAO->getUserByID($_SESSION["userID"]);
-    $tpl->assign("INDEX_FIRST", $user->getFirstName());
+    $loginUser = $userDAO->getUserByID($_SESSION["userID"]);
+    
+    //display root department and user
+    $deptDAO = new DepartmentDAO();
+    $rootDepart = $deptDAO->getDepartmentByID(1);
+    //find user belonged to the root
+    $users = $userDAO->getUsersByDepartment($rootDepart);
+    if ($users !== null) {
+        foreach ($users as $user) {
+            //ignore myself
+            if ($user->getUserID() == $loginUser->getUserID())
+                continue;
+            $tpl->assign("INDEX_USERID", (string)$user->getUserID());
+            $tpl->assign("INDEX_USERNAME", $user->getFirstName()." ".$user->getLastName());
+            $tpl->parse("INDEX_ROOTLI", ".li");
+        }
+    }
+    //find department belonged to the root
+    $childsDepart = $deptDAO->getChildDepartments($rootDepart);
+    if ($childsDepart !== null) {
+        foreach ($childsDepart as $depart) {
+            //ignore root folder
+            if ($depart->getDepartmentID() === $depart->getParentID())
+                continue;
+            $tpl->assign("INDEX_DEPTNAME", $depart->getDepartmentName());
+            $tpl->parse("INDEX_ROOTLI", ".liul");
+        }
+    }
+    $tpl->parse("INDEX_DEPART", "rootul");
+    
+    //display groups which belongs to this user
+    $gmDAO = new GroupMemberDAO();
+    $groupMembers = $gmDAO->getGroupMembersByUser($loginUser);
+    if ($groupMembers !== null)
+        foreach ($groupMembers as $gm) {
+            //display group ul
+            $group = $gm->getGroup();
+            $tpl->assign("INDEX_GROUPID", $group->getGroupID());
+            $tpl->assign("INDEX_GROUPNAME", $group->getGroupName());
+            $tpl->parse("INDEX_GROUPLI", ".groupli");
+            //display group tab
+            $tpl->parse("INDEX_GROUPTAB", ".grouptab");
+        }
+    else {
+        $tpl->assign("INDEX_GROUPLI", "");
+        $tpl->assign("INDEX_GROUPTAB", "You didn't have any group!");
+    }
+        
+    $tpl->parse("INDEX_GROUPUL", "groupul");
+    
+    
+    $tpl->assign("INDEX_FIRST", $loginUser->getFirstName());
+    
     
     $tpl->parse("MAIN", "main");
     $tpl->FastPrint();
@@ -65,7 +121,7 @@ function isGroupActivate($group) {
 
 function getDepartments() {
     $deptDAO = new DepartmentDAO();
-    $root = $deptDAO->getDepartmentByID(0);
+    $root = $deptDAO->getDepartmentByID(1);
     return getDeptTree($root, $deptDAO);
 }
 function getDeptTree($root, $deptDAO) {
