@@ -51,10 +51,10 @@ INSERT INTO `t_department` (`id_department`, `id_parent`, `department_name`) VAL
 (67, 39, '2014 Spring AC');
 
 INSERT INTO `t_user` (`id_user`, `id_role`, `id_department`, `username`, `password`, `first_name`, `last_name`, `gender`, `photo_url`) VALUES
-(1, 1, 1, 'root1', 'root1', 'Anakin', 'Skywalker', 1, 'photo/default.png');
+(1, 1, 1, 'rootroot1', 'rootroot1', 'Anakin', 'Skywalker', 1, 'photo/default.png');
 
 INSERT INTO `discussion`.`t_user` (`id_role`, `id_department`, `username`, `password`, `first_name`, `last_name`, `gender`, `photo_url`) VALUES 
-('1', '1', 'root2', 'root2', 'rootfirstname', 'rootlastname', '2', 'photo/default.png'),
+('1', '1', 'rootroot2', 'rootroot2', 'rootfirstname', 'rootlastname', '2', 'photo/default.png'),
 
 ('2', '2', 'stevens', 'stevens', 'stevensfn', 'stevensln', 1, 'photo/default.png'),
 ('2', '3', 'newyork', 'newyork', 'newyorkfn', 'newyorkln', 2, 'photo/default.png'),
