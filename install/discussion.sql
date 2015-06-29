@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `t_department` (
 --
 
 INSERT INTO `t_department` (`id_department`, `id_parent`, `department_name`) VALUES
-(0, 0, 'Root');
+(1, 1, 'Root');
 
 -- --------------------------------------------------------
 
@@ -98,10 +98,10 @@ CREATE TABLE IF NOT EXISTS `t_role` (
 --
 
 INSERT INTO `t_role` (`id_role`, `role_name`) VALUES
-(0, 'Forbiden'),
 (1, 'Root'),
 (2, 'Administrator'),
-(3, 'User');
+(3, 'User'),
+(4, 'Forbiden');
 
 -- --------------------------------------------------------
 

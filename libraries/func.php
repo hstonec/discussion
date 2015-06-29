@@ -165,7 +165,7 @@ function deleteDepartment($adminID, $departmentID) {
 	if($admin->getRole()->getRoleID !== 1 || $admin->getRole()->getRoleID !== 2)
 		return "You do not have the right to add department!";
 	$departmentDAO = new DepartmentDAO();
-	$departmentDAO->deleteDepartmentByID($departmentID);	
+	$departmentDAO->deleteDepartmentByID($departmentID);//need function	
 }
 function maintainDepartment($adminID, $departmentID, $newDepartmentName) {
 	$userDAO = new UserDAO();
