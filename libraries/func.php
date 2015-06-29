@@ -56,6 +56,7 @@ function changeUserRole($adminID, $userID, $roleID) {
 		
 		$user->setRole($role);
 		$userDAO->updateUser($user);
+		echo "<br>You have successfully changed ".$user->getUsername()."\'s role to ".$role->getRoleName();
 	}
 }
 function changeUserPassword($userID, $password) {
@@ -64,12 +65,13 @@ function changeUserPassword($userID, $password) {
 	
 	if(!isValidPassword($password))
 		return "Invalid password!";
-	if(user->getRole()->getRoleID() == 0)
+	if($user->getRole()->getRoleID() == 0)
 		return "You do not have right to change it!";
 	
 	$user->setPassword($password);
 	$userDAO = new UserDAO();
 	$userDAO->updateUser($user);
+	echo "<br>You have successfully changed ".$user->getUsername()."\'s password!";
 }
 function changeUserDepartment($userID, $departmentID) {
 	$userDAO = new UserDAO();
@@ -82,7 +84,8 @@ function changeUserDepartment($userID, $departmentID) {
 	
 	if($user->getRole()->getRoleID() == 1 || $user->getRole()->getRoleID() == 2) {
 		$user->setDepartment($dept);
-		$userDAO->updateUser($user);	
+		$userDAO->updateUser($user);
+		echo "<br>You have successfully changed ".$user->getUsername()."\'s role to ".$department->getDepartmentName();		
 	}
 }
 function changeUserFirstName($userID, $firstname) {
@@ -94,6 +97,7 @@ function changeUserFirstName($userID, $firstname) {
 	
 	$user->setFirstName($firstname);
 	$userDAO->updateUser($user);
+	echo "<br>You have successfully changed ".$user->getUsername()."\'s first name to ".$user->getFirstName();
 }
 function changeUserLastName($userID, $lastname) {
 	$userDAO = new UserDAO();
@@ -104,16 +108,18 @@ function changeUserLastName($userID, $lastname) {
 	
 	$user->setLastName($lastname);
 	$userDAO->updateUser($user);
+	echo "<br>You have successfully changed ".$user->getUsername()."\'s last name to ".$user->getLastName();
 }
 function changeUserGender($userID, $gender) {
 	$userDAO = new UserDAO();
 	$user = $userDAO->getUserByID($userID);
 	
-	if($gender !== 0 || $gender !== 1)
+	if($gender !== 1 && $gender !== 2){
 		return "Please select Male or Female!";
-	
+	}
 	$user->setGender($gender);
 	$userDAO->updateUser($user);
+	echo "<br>You have successfully changed ".$user->getUsername()."\'s gender to ".$user->getGender();
 }
 function changeUserProfile($userID, $departmentID, $firstname, $lastname, $gender) {
 	$userDAO = new UserDAO();
@@ -139,7 +145,7 @@ function changeUserProfile($userID, $departmentID, $firstname, $lastname, $gende
 	
 	$user->setLastName($lastname);
 	
-	if($gender !== 0 || $gender !== 1)
+	if($gender !== 0 && $gender !== 1)
 		return "Please select Male or Female!";
 	
 	$user->setGender($gender);
