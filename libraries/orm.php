@@ -390,7 +390,20 @@ class GroupDAO {
         return true;
     }
     public function getGroupByID($groupID) {
-        
+        $sql = "select id_group, id_owner, group_name, activate_status ".
+               "from t_group ".
+               "where id_group = ".$groupID;
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $owner = $userDAO->getUserByID($row["id_owner"]);
+        return new Group(
+            $owner,
+            $row["group_name"],
+            $row["activate_status"],
+            $row["id_group"]
+        );
     }
 }
 class Group {
@@ -434,14 +447,10 @@ class Group {
 
 class GroupMemberDAO {
     private $db;
-    private $userDAO;
-    private $groupDAO;
     
     public function __construct() {
         $this->db = new database();
         $this->db->connect();
-        $userDAO = new UserDAO();
-        $groupDAO = new GroupDAO();
     }
     public function __destruct() {
         $this->db->disconnect();
@@ -461,7 +470,13 @@ class GroupMemberDAO {
         $this->db->send_sql($sql);
         return true;
     }
-    public function getGroupMemberByID($groupID, $userID) {
+    public function getGroupMember($group, $user) {
+        if (gettype($group) != "object" || gettype($user) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $groupID = $group->getGroupID();
+        $userID = $user->getUserID();
         $sql = "select id_group, id_user, accept_status ".
                "from t_group_member ".
                "where id_group = ".$groupID." and ".
@@ -471,8 +486,8 @@ class GroupMemberDAO {
         if ($row === null)
             return null;
         return new GroupMember(
-            $userDAO->getUserByID($row["id_user"]),
-            $groupDAO->getGroupByID($row["id_group"]),
+            $group,
+            $user,
             $row["accept_status"]
         );
     }
@@ -539,7 +554,7 @@ class Record {
     private $content;
     private $time;
     private $displayStatus;
-    public function __construct($group, $user, $messageType, $content, $time, $displayStatus, $recordID = null) {
+    public function __construct($group, $user, $messageType, $content, $displayStatus, $time = null, $recordID = null) {
         $this->group = $group;
         $this->user = $user;
         $this->messageType = $messageType;

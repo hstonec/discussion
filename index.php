@@ -28,6 +28,23 @@ function postRecord($userID, $groupID, $messageType, $content) {
     $group = $groupDAO->getGroupByID($groupID);
     if ($group === null)
         return "Can not find this group!";
+    if (!isGroupActivate($group))
+        return "Group is not activated!";
+    $userDAO = new UserDAO();
+    $user = $userDAO->getUserByID($userID);
+    $groupMemberDAO = new GroupMemberDAO();
+    $groupMember = $groupMemberDAO->getGroupMember($group, $user);
+    if ($groupMember === null)
+        return "User didn't belong to this group!";
+    $record = new Record(
+        $group,
+        $user,
+        $messageType, 
+        $content, 
+        1
+    );
+    $recordDAO = new RecordDAO();
+    $recordDAO->insertRecord($record);
     
 }
 
@@ -40,7 +57,10 @@ function isValidMessage($messageType, $content) {
 }
 
 function isGroupActivate($group) {
-    
+    if ($group->getActivateStatus() === 1)
+        return true;
+    else
+        return false;
 }
 
 function getDepartments() {
