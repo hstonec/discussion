@@ -1,6 +1,5 @@
 <?php
 
-
 function isValidUsername($username) {
     if (strlen($username) < 6 ||
         strlen($username) > 20 ||
@@ -176,7 +175,7 @@ function maintainDepartment($adminID, $departmentID, $newDepartmentName) {
 	$departmentDAO = new DepartmentDAO();
 	$department = $departmentDAO->getDepartmentByID($departmentID);
 	$department->setDepartmentName($newDepartmentName);
-	$departmentDAO->updateDepartment($department);//⊿Τ硂ㄧ计
+	$departmentDAO->updateDepartment($department);//need function
 }
 function changeGroupStatus($adminID, $groupID, $activateStatus) {
 	$userDAO = new UserDAO();
@@ -184,11 +183,11 @@ function changeGroupStatus($adminID, $groupID, $activateStatus) {
 	if($admin->getRole()->getRoleID !== 1 || $admin->getRole()->getRoleID !== 2)
 		return "You do not have the right to change group status!";
 	$groupDAO = new GroupDAO();
-	$group = $groupDAO->getGroupByID($groupID);//⊿Τ硂ㄧ计
+	$group = $groupDAO->getGroupByID($groupID);//need function
 	if($group->getActivateStatus() === $actuvateStatus)
 		return "Same Status, no need to change it!";
 	$group->setActivateStatus($activateStatis);
-	$groupDAO->updateGroup($group);//⊿Τ硂ㄧ计
+	$groupDAO->updateGroup($group);//need function
 }
 function changeRecordStatus($adminID, $recordID, $displayStatus) {
 	$userDAO = new UserDAO();
@@ -196,11 +195,11 @@ function changeRecordStatus($adminID, $recordID, $displayStatus) {
 	if($admin->getRole()->getRoleID !== 1 || $admin->getRole()->getRoleID !== 2)
 		return "You do not have the right to change record status!";
 	$recordDAO = new RecordDAO();
-	$record = $recordDAO->getRecordByID($recordID);//⊿Τ硂ㄧ计
+	$record = $recordDAO->getRecordByID($recordID);//need function
 	if($record->getDisplayStatus() === $displayStatus)
 		return "Same Status, no need to change it!";
 	$record->setDisplayStatus($displayStatus);
-	$recordDAO->updateRecord($record);//⊿Τ硂ㄧ计
+	$recordDAO->updateRecord($record);//need function
 }
 
 ?>
