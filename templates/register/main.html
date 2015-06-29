@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Register Main Page</title>
+</head>
+<body>
+<p>{REGISTER_ERROR}</p>
+<form action = "register.php" method = "post">
+Please enter the following information to register as a new user.<br><br>
+User Name:
+    <input name = "username" type = "text" placeholder = "user name"
+size = "10" /> (length between 6 to 20, use a-z, A-Z and 0-9 only) <br>
+User password:
+    <input name = "password1" type = "password" placeholder = "user password"
+size = "10" /> (length between 6 to 20, use a-z, A-Z, !, @, #, $ and 0-9 only) <br>
+Enter password again:
+	<input name = "password2" type = "password" placeholder = "user password"
+size = "10" /><br>
+First Name:
+	<input name = "firstname" type = "password" placeholder = "first name"
+size = "10" /><br>
+Last Name:
+	<input name = "lastname" type = "password" placeholder = "last name"
+size = "10" /><br>
+department:
+	<option vaule = ""></option>
+Gender:
+	<input name = "gender" type = "radio" value = "male" />Male
+	<input name = "gender" type = "radio" value = "female" />Female<br>
+Photo URL:
+	<input name = "photourl" type = "password" placeholder = "photo URL"
+size = "30" /><br><br>
+
+    <input type = "submit" value = "Register"/>
+</form>
+
+<?php
+require_once("libraries/head.php");
+$sql = "select * from t_department";
+$res = $this->db->send_sql($sql);
+
+
+
+
+?>
+
+</body>
+</html>
