@@ -23,10 +23,6 @@ class RoleDAO {
         return true;
     }
     public function getRoleByID($roleID) {
-        if (!is_int($roleID)) { 
-            echo "ERROR: Wrong argument type!"; 
-            exit; 
-        }
         $sql = "select id_role, role_name from t_role where id_role = ".$roleID;
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
@@ -105,10 +101,6 @@ class DepartmentDAO {
         return true;
     }
     public function getDepartmentByID($departmentID) {
-        if (!is_int($departmentID)) { 
-            echo "ERROR: Wrong argument type!"; 
-            exit; 
-        }
         if (isset($this->cache[$departmentID]))
             return $this->cache[$departmentID];
         
@@ -219,7 +211,6 @@ class UserDAO {
         return true;
     }
     public function getUserByID($userID) {
-        $userID = (int)$userID;
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
@@ -398,6 +389,22 @@ class GroupDAO {
         $group->setGroupID($this->db->insert_id());
         return true;
     }
+    public function getGroupByID($groupID) {
+        $sql = "select id_group, id_owner, group_name, activate_status ".
+               "from t_group ".
+               "where id_group = ".$groupID;
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $owner = $userDAO->getUserByID($row["id_owner"]);
+        return new Group(
+            $owner,
+            $row["group_name"],
+            $row["activate_status"],
+            $row["id_group"]
+        );
+    }
 }
 class Group {
     private $groupID;
@@ -463,6 +470,27 @@ class GroupMemberDAO {
         $this->db->send_sql($sql);
         return true;
     }
+    public function getGroupMember($group, $user) {
+        if (gettype($group) != "object" || gettype($user) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $groupID = $group->getGroupID();
+        $userID = $user->getUserID();
+        $sql = "select id_group, id_user, accept_status ".
+               "from t_group_member ".
+               "where id_group = ".$groupID." and ".
+                     "id_user = ".$userID;
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        return new GroupMember(
+            $group,
+            $user,
+            $row["accept_status"]
+        );
+    }
 }
 class GroupMember {
     private $group;
@@ -526,7 +554,7 @@ class Record {
     private $content;
     private $time;
     private $displayStatus;
-    public function __construct($group, $user, $messageType, $content, $time, $displayStatus, $recordID = null) {
+    public function __construct($group, $user, $messageType, $content, $displayStatus, $time = null, $recordID = null) {
         $this->group = $group;
         $this->user = $user;
         $this->messageType = $messageType;
