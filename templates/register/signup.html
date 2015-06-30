@@ -5,15 +5,19 @@
     <meta charset="UTF-8">
     <title>Register Form</title>
     <link href="signup.css" rel='stylesheet' type='text/css' />
+    <link href="../../jquery/jquery-ui.min.css" rel='stylesheet' type='text/css' />
+    <script src="../../jquery/jquery.js"></script>
+    <script src="../../jquery/jquery-ui.min.js"></script>
+    <script src="dialog.js"></script>
+
 </head>
 <body>
-    <form>
-         <fieldset>
-              <legend>Sign Up:</legend>
-                <p class="contact"><label for="username">Create a username:(length between 6 to 20, use a-z, A-Z and 0-9 only) </label></p> 
+    <div id="test">
+        <form id="form1" action="get" action="../login/login.html">
+             <fieldset>
+                <p class="contact"><label for="username">Create a username</label></p> 
                 <input id="username" name="username" placeholder="username" required="" tabindex="2" type="text"> 
-
-                <p class="contact"><label for="password">Create a password:(length between 6 to 20, use a-z, A-Z, !, @, #, $ and 0-9 only)</label> </p>
+                <p class="contact"><label for="password">Create a password</label> </p>
                     <input type="password" id="password" name="password" required=""> 
                 <p class="contact"><label for="repassword">Confirm password</label> </p>
                     <input type="password" id="repassword" name="repassword" required=""> 
@@ -31,10 +35,9 @@
                     </select></p>
                 <p class="contact"><label for="userphoto">Photo Profile</label></p> 
                     <input id="userphoto" name="userphone" placeholder="Photo URL" required="" type="text"><br/>
-                    <input class="buttom" name="submit" id="submit" tabindex="5" value="Sign me up!" type="submit"> 
-         </fieldset>
-    </form>
- 
+             </fieldset>
+        </form>
+    </div>
+    
 </body>
-
-
+</html>

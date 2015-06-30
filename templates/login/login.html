@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Main Page</title>
+    <link href="login.css" rel='stylesheet' type='text/css' />
+</head>
+<body>
+<div id = "login_form_bg">
+    <img src="Dis_pic1.png" alt="DISCUSSION" height=14% width=100%/><br/>
+    <form id = "loginform" action = "login.php" method = "post">
+        <p>
+            <label for="user_login">Username<br>
+                <input type="text" name="log" id="user_login" required></label>
+        </p>
+        <p>
+            <label for="user_pass">Password<br>
+                <input type="password" name="pwd" id="user_pass" required></label>
+        </p>
+        <p>
+            <input type="submit" name="submit" id="user_submit" value="LOGIN">
+        </p>
+        <p>
+            <input type="button" name="signup" id="user_signup" value="SIGN UP">
+        </p>
+    </form>
+</div>
+</body>
+</html>
