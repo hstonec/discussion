@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html lang="en-US">
-
 <head>
     <meta charset="UTF-8">
-    <title>Login Main Page</title>
-    <link href="login.css" rel='stylesheet' type='text/css' />
+    <title>Login</title>
+    <link href="templates/login/login.css" rel='stylesheet' type='text/css' />
+    <link href="jquery/jquery-ui.min.css" rel='stylesheet' type='text/css' />
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.min.js"></script>
+    <script>
+        function verify() {
+            var username = $("#user_login");
+            var password = $("#user_pass");
+            
+            return true;
+        }
+        
+        $(document).ready(function() {
+            $("#loginform").on("submit", verify);
+        });
+    </script>
 </head>
 <body>
 <div id = "login_form_bg">
-    <img src="Dis_pic1.png" alt="DISCUSSION" height=14% width=100%/><br/>
+    <img src="templates/login/Dis_pic1.png" alt="DISCUSSION" height=14% width=100%/><br/>
     <form id = "loginform" action = "login.php" method = "post">
         <p>
             <label for="user_login">Username<br>
-                <input type="text" name="log" id="user_login" required></label>
+                <input type="text" name="username" id="user_login" required></label>
         </p>
         <p>
             <label for="user_pass">Password<br>
-                <input type="password" name="pwd" id="user_pass" required></label>
+                <input type="password" name="password" id="user_pass" required></label>
         </p>
         <p>
             <input type="submit" name="submit" id="user_submit" value="LOGIN">

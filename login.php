@@ -32,13 +32,13 @@ function execLogin($username, $password) {
 }
 function displayLogin($errorMessage = null) {
     $tpl = new FastTemplate("templates/");
-    $tpl->define(array("main" => "login/main.html"));
+    $tpl->define(array("login" => "login/login.html"));
     if ($errorMessage !== null)
         $tpl->assign("LOGIN_ERROR", $errorMessage);
     else
         $tpl->assign("LOGIN_ERROR", "Welcome!");
     
-    $tpl->parse("MAIN", "main");
+    $tpl->parse("MAIN", "login");
     $tpl->FastPrint();
 }
 
