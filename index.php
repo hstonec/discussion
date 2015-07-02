@@ -1,10 +1,32 @@
 <?php
 require_once("libraries/head.php");
+require_once("libraries/class.FastTemplate.php");
+
 
 if (!isLogin())
     forward("login.php");
 
-displayIndex();
+//displayIndex();
+temp();
+
+function temp() {
+    $tpl = new FastTemplate("templates/");
+    $tpl->define(array("web_main" => "web_main.html",
+                       "web_header" => "web_header.html",
+                       "head_script" => "index/head_script.html",
+                       "body" => "index/body.html",
+                       "web_nav" => "web_nav.html",
+                       "web_footer" => "web_footer.html"));
+    
+    $tpl->assign("TITLE", "Home");
+    $tpl->parse("WEB_HEADER", "web_header");
+    $tpl->parse("HEAD_SCRIPT", "head_script");
+    $tpl->parse("WEB_NAV", "web_nav");
+    $tpl->parse("BODY", ".body");
+    $tpl->parse("WEB_FOOTER", "web_footer");
+    $tpl->parse("MAIN", "web_main");
+    $tpl->FastPrint();
+}
 
 function displayIndex() {
     $tpl = new FastTemplate("templates/");

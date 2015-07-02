@@ -9,10 +9,10 @@
 	class database
 	{
 		private $res;
-		private $host = "127.0.0.1"; // change to your own default values
-		private $user = "user"; // change to your own default values
-		private $pass = "pass"; // change to your own default values
-		private $db = "";
+		private $host = "localhost"; // change to your own default values
+		private $user = "cs546"; // change to your own default values
+		private $pass = "654321"; // change to your own default values
+		private $db = "discussion";
 		private $mysqli;
 
 

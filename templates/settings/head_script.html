@@ -1,0 +1,18 @@
+<script>    
+$(document).ready(function() {
+   lastID = "1";
+    
+   $(".list-group-item").click(function() {
+       thisID = $(this).attr("id");
+       
+       $("#" + lastID).removeClass("active");
+       $(this).addClass("active");
+       
+       $("#pageheader").text($(this).text());
+       $("#div" + lastID).addClass("not-display");
+       
+       $("#div" + thisID).removeClass("not-display");
+       lastID = thisID;
+   }); 
+});
+</script>

@@ -1,0 +1,207 @@
+{WEB_HEADER}
+{WEB_NAV}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-7 col-sm-push-3">
+            <div class="page-header">
+                <h1>Group Name 1</h1>
+                <p>Created by <a href="#">Anakin Skywalker</a></p>
+            </div>
+        </div>
+    </div>
+			<!-- /.row -->
+
+    <div class="row">
+        <div class="col-sm-2 col-sm-push-10">
+
+            <!-- list group -->
+            <div class="list-group margin-b-3">
+                <a href="#" class="active list-group-item">Group Name 1</a>
+                <a href="#" class="list-group-item">Group Name 2</a>
+                <a href="#" class="list-group-item">Group Name 3</a>
+            </div>
+        </div>
+        <div class="col-sm-7 col-sm-push-1">
+
+            <!-- Comments -->
+            <div class="well">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="http://placehold.it/70x70" alt="">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="margin-t-0">Shicong Huang</h4>
+                        <p><a href="#">12 June 2015 11:13 pm</a></p>
+                        <p>Hello, everyone!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="http://placehold.it/70x70" alt="">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="margin-t-0">Shicong Huang</h4>
+                        <p><a href="#">12 June 2015 11:13 pm</a></p>
+                        <p>Hello, everyone!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="http://placehold.it/70x70" alt="">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="margin-t-0">Shicong Huang</h4>
+                        <p><a href="#">12 June 2015 11:13 pm</a></p>
+                        <p>Hello, everyone!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="http://placehold.it/70x70" alt="">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="margin-t-0">Shicong Huang</h4>
+                        <p><a href="#">12 June 2015 11:13 pm</a></p>
+                        <p>Hello, everyone!</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Comment form -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="">Leave a Post</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Upload File<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="">Image</a></li>
+                        <li><a href="">Other</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Create Link</a></li>
+            </ul>
+
+            <div class="well margin-t-h">
+                <form>
+                    <div class="form-group">
+                        <label for="contactComment">Content</label>
+                        <textarea class="form-control" id="contactComment"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+
+        </div>
+        <div class="col-sm-3 col-sm-pull-9">
+            <!-- Search -->
+            <div class="well">
+                <h4 class="margin-t-0">Search</h4>
+                <form action="#">
+                    <div class="input-group">
+                        <label class="sr-only" for="search-form">Search the site</label>
+                        <input type="text" class="form-control" id="search-form">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Panel -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Users</h4>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="checkbox">
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 1
+                            </label>
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 2
+                            </label>
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 3
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 4
+                            </label>
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 5
+                            </label>
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 6
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 7
+                            </label>
+                            <label class="col-sm-4">
+                                <input type="checkbox">User 8
+                            </label>
+                        </div>
+                        <hr>
+                        <div class="form-group"> 
+                            <div class="col-sm-10">
+                                <button id = "createGroup" type="button" class="btn btn-default">Create a Group</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+{WEB_FOOTER}
+</div>
+<!-- Modal -->
+        <div id="groupModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create New Group</h4>
+              </div>
+                
+              <div class="modal-body">  
+                <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label class="control-label col-sm-3" for="groupName">Group Name:</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" id="groupName" placeholder="Enter group name">
+                    </div>
+                  </div>
+                  <div class="form-group"> 
+                    <div class="col-sm-offset-3 col-sm-10">
+                      <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>

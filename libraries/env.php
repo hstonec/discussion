@@ -1,5 +1,5 @@
 <?php
-session_set_cookie_params(300);
+session_set_cookie_params(1000);
 session_start();
 
 function isLogin() {
@@ -48,8 +48,36 @@ function sendAjaxRes($jsonArray) {
         echo "ERROR: Argument of sendAjaxRes() isn't an Array or is empty!";
         exit;
     }
+    if (!isset($jsonArray["success"]) || !isset($jsonArray["message"])) {
+        echo "ERROR: \$jsonArray should contain \"success\" and \"message\"!";
+        exit;
+    }
     header("Content-type: application/json");
     echo json_encode($jsonArray);
+    exit;
+}
+function sendAjaxResSuc($jsonArray, $message = null) {
+    if ($message === null) {
+        $message = $jsonArray;
+        $jsonArray = array();
+    }
+    $jsonArray["success"] = true;
+    $jsonArray["message"] = $message;
+    sendAjaxRes($jsonArray);
+}
+function sendAjaxResErr($jsonArray, $message = null) {
+    if ($message === null) {
+        $message = $jsonArray;
+        $jsonArray = array();
+    }
+    $jsonArray["success"] = false;
+    $jsonArray["message"] = $message;
+    sendAjaxRes($jsonArray);
+}
+function sendAjaxRedirect($url) {
+    header("Content-type: application/json");
+    $res = array("url" => $url);
+    echo json_encode($res);
     exit;
 }
 ?>

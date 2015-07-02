@@ -1,0 +1,242 @@
+{WEB_HEADER}
+{WEB_NAV}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-8 col-sm-push-4">
+            <div class="page-header">
+                <h1 id="pageheader">My Profile</h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-4">
+            <!-- list group -->
+            <div class="list-group margin-b-3">
+                <a href="#" class="active list-group-item" id="1">My Profile</a>
+                <a href="#" class="list-group-item" id="2">Password</a>
+                <a href="#" class="list-group-item" id="3">Group</a>
+                <a href="#" class="list-group-item" id="4">Department</a>
+                <a href="#" class="list-group-item" id="5">User</a>
+                <a href="#" class="list-group-item" id="6">Record</a>
+            </div>
+        </div>
+        <div class="col-sm-8" id="div1">
+            <form id="signupform" role="form">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <a href="#" data-toggle="tooltip" title="Length between 6 to 20, only accepts a-z, A-Z and 0-9" data-placement="top">
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+            </a>
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <a href="#" data-toggle="tooltip" title="Length between 6 to 20, only accepts a-z, A-Z, !, @, #, $ and 0-9" data-placement="top">
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </a>
+          </div>
+          <div class="form-group">
+            <label for="confirmpw">Confirm Password:</label>
+            <input type="password" class="form-control" id="confirmpw" placeholder="Enter password again">
+          </div>
+          <div class="form-group">
+            <label for="firstname">First Name:</label>
+            <input type="text" class="form-control" id="firstname" placeholder="Enter your first name">
+          </div>
+          <div class="form-group">
+            <label for="lastname">Last Name:</label>
+            <input type="text" class="form-control" id="lastname" placeholder="Enter your last name">
+          </div>
+          <div class="form-group">
+            <label>Gender:</label>
+              <label class="radio-inline"><input type="radio" name="sex" value="1">Male</label>
+          <label class="radio-inline"><input type="radio" name="sex" value="2">Female</label>
+          </div>
+          
+          
+          <div class="form-group">
+            <label for="photo">Upload Photo:</label>
+            <input type="file" class="form-control" id="photo" placeholder="Enter your last name">
+          </div>
+            
+          <hr>
+          <div class="form-group"> 
+            <button type="submit" class="btn btn-default">Submit</button>
+          </div>
+        </form>
+        </div>
+        <div class="col-sm-8 not-display" id="div2">
+            
+            
+                <form id="loginform" class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label class="control-label col-sm-3" for="password">Password:</label>
+                    <div class="col-sm-9">
+                      <input type="password" class="form-control" id="password" placeholder="Enter password">
+                    </div>
+                  </div><div class="form-group">
+                    <label class="control-label col-sm-3" for="password">New Password:</label>
+                    <div class="col-sm-9">
+                      <input type="password" class="form-control" id="password" placeholder="Enter password">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-sm-3" for="password">Confirm Password:</label>
+                    <div class="col-sm-9">
+                      <input type="password" class="form-control" id="password" placeholder="Enter password">
+                    </div>
+                  </div>
+                  <div class="form-group"> 
+                    <div class="col-sm-offset-3 col-sm-10">
+                      <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                  </div>
+                </form>
+            
+            
+        
+        </div>
+        <div class="col-sm-8 not-display" id="div3">
+            <div class="well">
+                <h4 class="margin-t-0">Search</h4>
+                <form action="#">
+                    <div class="input-group">
+                        <label class="sr-only" for="search-form">Search the site</label>
+                        <input type="text" class="form-control" id="search-form">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Group Name</th>
+                <th>Group Owner</th>
+                <th>Group Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Group1</td>
+                <td>Doe</td>
+                <td>Activated</td>
+              </tr>
+              <tr>
+                <td>Group2</td>
+                <td>Moe</td>
+                <td>Activated</td>
+              </tr>
+              <tr>
+                <td>Group3</td>
+                <td>Dooley</td>
+                <td>Activated</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-8 not-display" id="div4">
+            
+        </div>
+        <div class="col-sm-8 not-display" id="div5">
+            <div class="well">
+                <h4 class="margin-t-0">Search</h4>
+                <form action="#">
+                    <div class="input-group">
+                        <label class="sr-only" for="search-form">Search the site</label>
+                        <input type="text" class="form-control" id="search-form">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Doe</td>
+                <td>Doe</td>
+                <td>Male</td>
+                <td>Root</td>
+              </tr>
+              <tr>
+                <td>Moe</td>
+                <td>Moe</td>
+                <td>Female</td>
+                <td>Administrator</td>
+              </tr>
+              <tr>
+                <td>Dooley</td>
+                <td>Dooley</td>
+                <td>Male</td>
+                <td>User</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-8 not-display" id="div6">
+            <div class="well">
+                <h4 class="margin-t-0">Search</h4>
+                <form action="#">
+                    <div class="input-group">
+                        <label class="sr-only" for="search-form">Search the site</label>
+                        <input type="text" class="form-control" id="search-form">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Post ID</th>
+                <th>Content</th>
+                <th>Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>123</td>
+                <td>Hello!</td>
+                <td>June 5 2015 22:01:33</td>
+                <td>Normal</td>
+              </tr>
+              <tr>
+                <td>456</td>
+                <td>Hi!</td>
+                <td>June 5 2015 22:01:33</td>
+                <td>Normal</td>
+              </tr>
+              <tr>
+                <td>789</td>
+                <td>How are you!</td>
+                <td>June 5 2015 22:01:33</td>
+                <td>Normal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+    </div>
+{WEB_FOOTER}
+</div>
