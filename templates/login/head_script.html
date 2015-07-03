@@ -3,7 +3,7 @@ function verify() {
     var username = $("#username");
     var password = $("#password");
             
-    $.post("ajax_verify_login.php",
+    $.post("ajax_login.php",
           { "username" : username.val(),
             "password" : password.val() },
            function(data) {

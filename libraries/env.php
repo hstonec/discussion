@@ -56,22 +56,34 @@ function sendAjaxRes($jsonArray) {
     echo json_encode($jsonArray);
     exit;
 }
-function sendAjaxResSuc($jsonArray, $message = null) {
-    if ($message === null) {
-        $message = $jsonArray;
-        $jsonArray = array();
-    }
+
+/* Usage:
+ *     sendAjaxResSuc($message)
+ *     sendAjaxResSuc($message, $jsonArray)
+ *     sendAjaxResSuc($jsonArray)
+ */
+function sendAjaxResSuc($message, $jsonArray = null) {
+    if (gettype($message) == "array")
+        $jsonArray = $message;
+    else {
+        if ($jsonArray === null)
+            $jsonArray = array();
+        $jsonArray["message"] = $message;
+    } 
+       
     $jsonArray["success"] = true;
-    $jsonArray["message"] = $message;
     sendAjaxRes($jsonArray);
 }
-function sendAjaxResErr($jsonArray, $message = null) {
-    if ($message === null) {
-        $message = $jsonArray;
-        $jsonArray = array();
-    }
+function sendAjaxResErr($message, $jsonArray = null) {
+    if (gettype($message) == "array")
+        $jsonArray = $message;
+    else {
+        if ($jsonArray === null)
+            $jsonArray = array();
+        $jsonArray["message"] = $message;
+    } 
+       
     $jsonArray["success"] = false;
-    $jsonArray["message"] = $message;
     sendAjaxRes($jsonArray);
 }
 function sendAjaxRedirect($url) {
@@ -80,4 +92,5 @@ function sendAjaxRedirect($url) {
     echo json_encode($res);
     exit;
 }
+
 ?>
