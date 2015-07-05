@@ -1,4 +1,10 @@
 <script>
+function createGroup(event) {
+    event.preventDefault();
+    $("#groupModal").modal("show");
+    return false;
+}
+
 function openDepartment(event) {
     event.preventDefault();
     departID = $(this).attr("id");
@@ -17,24 +23,17 @@ function openDepartment(event) {
            {"departid" : departID},
            function(data) {
                $("#departuserpanel").html(data);
-               $("#departuserform div a").click(openDepartment);
-               if ($("#previous").length > 0) {
+               if ($("#departuserform div a").length > 0)
+                   $("#departuserform div a").click(openDepartment);
+               if ($("#previous").length > 0)
                    $("#previous").click(openDepartment);
-               }
-               $("#createGroup").click(function() {
-                   $("#groupModal").modal("show");
-                   return false;
-               });
+               $("#createGroup").click(createGroup);
            },
            "text"
     );
 }
 $(document).ready(function() {
-    $("#createGroup").click(function() {
-        $("#groupModal").modal("show");
-        return false;
-    });
-    
+    $("#createGroup").click(createGroup);
     $("#departuserform div a").click(openDepartment);
     
     parentStack = [];
