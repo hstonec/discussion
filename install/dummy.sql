@@ -118,6 +118,18 @@ INSERT INTO `t_user` (`id_user`, `id_role`, `id_department`, `username`, `passwo
 (65, 3, 3, 'NGROUP', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'A', 'GROUP', 2, 'photo/default.png');
 
 
+INSERT INTO `t_group` (`id_group`, `id_owner`, `group_name`, `activate_status`) VALUES
+(1, 55, 'TEST', 1),
+(2, 57, 'HAHA', 2),
+(3, 55, 'TEST00', 2),
+(4, 57, 'HAHA00', 1),
+(5, 59, 'TALK', 1),
+(6, 51, 'DISCUSSION', 2),
+(7, 55, 'CS546', 1),
+(8, 57, 'CAMPUS_LIFE', 1),
+(9, 1, 'SPIDERMAN', 1),
+(10, 1, 'SUPERMAN', 1);
+
 INSERT INTO `t_group_member` (`id_group`, `id_user`, `accept_status`) VALUES
 (1, 1, 1),
 (1, 2, 1),
@@ -136,18 +148,6 @@ INSERT INTO `t_group_member` (`id_group`, `id_user`, `accept_status`) VALUES
 (9, 5, 2),
 (10, 5, 2);
 
-
-INSERT INTO `t_group` (`id_group`, `id_owner`, `group_name`, `activate_status`) VALUES
-(1, 55, 'TEST', 1),
-(2, 57, 'HAHA', 2),
-(3, 55, 'TEST00', 2),
-(4, 57, 'HAHA00', 1),
-(5, 59, 'TALK', 1),
-(6, 51, 'DISCUSSION', 2),
-(7, 55, 'CS546', 1),
-(8, 57, 'CAMPUS_LIFE', 1),
-(9, 1, 'SPIDERMAN', 1),
-(10, 1, 'SUPERMAN', 1);
 
 INSERT INTO `t_record` (`id_record`, `id_group`, `id_user`, `message_type`, `content`, `time`, `display_status`) VALUES
 (1, 1, 51, 1, 'bahah!', '2015-07-05 23:11:21', 1),
