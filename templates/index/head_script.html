@@ -1,11 +1,15 @@
 <script>
 function openDepartment(event) {
+    event.preventDefault();
     departID = $(this).attr("id");
     if (departID == "previous") {
-        departID = previousID;
-        previousID = previousIDStack.pop();
+        departID = parentStack.pop();
+        
     } else {
-        previousIDStack.push(previousID);
+        if (parentStack.length == 0)
+            parentStack.push(1);
+        else
+            parentStack.push(previousID);
         previousID = departID;
     }
     
@@ -13,6 +17,7 @@ function openDepartment(event) {
            {"departid" : departID},
            function(data) {
                $("#departuserpanel").html(data);
+               $("#departuserform div a").click(openDepartment);
                if ($("#previous").length > 0) {
                    $("#previous").click(openDepartment);
                }
@@ -32,7 +37,6 @@ $(document).ready(function() {
     
     $("#departuserform div a").click(openDepartment);
     
-    previousIDStack = [];
-    previousID = 1;
+    parentStack = [];
 });
 </script>
