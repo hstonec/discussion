@@ -8,10 +8,5 @@ if (!isLogin())
 
 logout();
 
-forward("login.php");
-
-$tpl = new FastTemplate("templates/");
-$tpl->define(array("main" => "logout/main.html"));    
-$tpl->parse("MAIN", "main");
-$tpl->FastPrint();
+forward("login.php?info=logout");
 ?>

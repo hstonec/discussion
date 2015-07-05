@@ -25,11 +25,82 @@ function isValidID($id) {
 function isValidName($name) {
 	if(strlen($name) < 2 || 
 	   strlen($name) > 20 ||
-	   preg_match('/[^A-Za-z0-9]/', $name) === 1)
+	   preg_match('/[^A-Za-z\']/', $name) === 1)
 	   return false;
 	else
 		return true;
 }
+function isValidGender($gender) {
+    if ($gender === "1" || $gender === "2")
+        return true;
+    else
+        return false;
+}
+function isValidUploadFile($error) {
+    if ($error === 0)
+        return true;
+    else if ($error === 1)
+        return "The uploaded file exceeds the upload_max_filesize.";
+    else if ($error === 2)
+        return "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";
+    else if ($error === 3)
+        return "The uploaded file was only partially uploaded.";
+    else if ($error === 4)
+        return "No file was uploaded.";
+    else
+        return "Unknown error, code: ".$error;
+}
+function isValidImage($filename) {
+    $validExt = array("jpg", "jpeg", "gif", "png");
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    if (in_array($ext, $validExt))
+        return true;
+    else
+        return "Unsupported file format, photo must be a jpeg/jpg/gif/png!";
+}
+
+function encryptPassword($password) {
+    return password_hash($password, PASSWORD_BCRYPT);
+}
+function verifyPassword($password, $hash) {
+    return password_verify($password, $hash);
+}
+
+function findDepartAndUser($departID, $userID) {
+    $departDAO = new DepartmentDAO();
+    $depart = $departDAO->getDepartmentByID($departID);
+    if ($depart === null)
+        return false;
+    $result = array();
+    $subDepart = $departDAO->getChildDepartments($depart);
+    if ($subDepart !== null) {
+        foreach($subDepart as $subDep) {
+            if ($subDep->getDepartmentID() === $subDep->getParentID())
+                continue;
+            $node = array();
+            $node["type"] = 1;
+            $node["id"] = $subDep->getDepartmentID();
+            $node["name"] = $subDep->getDepartmentName();
+            $result[] = $node;
+        }
+    }
+    $userDAO = new UserDAO();
+    $users = $userDAO->getUsersByDepartment($depart);
+    if ($users !== null) {
+        foreach($users as $user) {
+            if ($user->getUserID() == $userID)
+                continue;
+            $node = array();
+            $node["type"] = 2;
+            $node["id"] = $user->getUserID();
+            $node["name"] = $user->getFirstName()." ".$user->getLastName();
+            $result[] = $node;
+        }
+    }
+    return $result;
+}
+
+
 function changeUserRole($adminID, $userID, $roleID) {
 	$userDAO = new UserDAO();
 	$roleDAO = new RoleDAO();
@@ -207,5 +278,6 @@ function changeRecordStatus($adminID, $recordID, $displayStatus) {
 	$record->setDisplayStatus($displayStatus);
 	$recordDAO->updateRecord($record);//need function
 }
+
 
 ?>

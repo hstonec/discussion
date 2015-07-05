@@ -161,6 +161,11 @@
 				exit;
 			}
 		}
+        
+        // Escape string
+        public function escape_str($str) {
+            return addslashes($str);
+        }
 	}
 
 ?>

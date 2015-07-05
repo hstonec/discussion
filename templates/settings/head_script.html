@@ -9,9 +9,9 @@ $(document).ready(function() {
        $(this).addClass("active");
        
        $("#pageheader").text($(this).text());
-       $("#div" + lastID).addClass("not-display");
+       $("#div" + lastID).addClass("hide");
        
-       $("#div" + thisID).removeClass("not-display");
+       $("#div" + thisID).removeClass("hide");
        lastID = thisID;
    }); 
 });

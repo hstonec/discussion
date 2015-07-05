@@ -2,6 +2,9 @@
 require_once("libraries/head.php");
 require_once("libraries/class.FastTemplate.php");
 
+if (isLogin())
+    forward("index.php");
+
 displaySignup();
 
 function displaySignup() {

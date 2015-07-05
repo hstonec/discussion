@@ -1,34 +1,50 @@
 <script>
-function verify() {
+function verify(event) {
+    event.preventDefault();
+    
     var username = $("#username");
     var password = $("#password");
+    var confirmpw = $("#confirmpw");
+    var firstname = $("#firstname");
+    var lastname = $("#lastname");
+    var genderm = $("#genderm");
+    var genderf = $("#genderf");
+    var gender;
+    if (genderm.prop("checked"))
+        gender = genderm;
+    else
+        gender = genderf;
             
-    $.post("ajax_verify_login.php",
-          { "username" : username.val(),
-            "password" : password.val() },
+    $.post("ajax_signup.php",
+           {"username": username.val(),
+            "password": password.val(),
+            "confirmpw": confirmpw.val(),
+            "firstname": firstname.val(),
+            "lastname": lastname.val(),
+            "gender": gender.val()},
            function(data) {
                if (data.hasOwnProperty("url")) {
                    window.location.href = data.url;
                }
                if (data.success) {
-                   window.location.href = "index.php";
+                   window.location.href = "login.php?info=signup";
                } else {
                    $("#error").html(errorOriginHtml + " " + data.message)
-                              .removeClass("not-display");
+                              .removeClass("hide");
                    $("#alert").click(function() {
-                       $("#error").addClass("not-display");
+                       $("#error").addClass("hide");
                    });
                }
            },
            "json"
     );
     
-    return false;
 }
 
 $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip(); 
-    $("#loginform").submit(verify);
+    
+    $("#signupform").submit(verify);
     errorOriginHtml = $("#error").html();
 });
 </script>

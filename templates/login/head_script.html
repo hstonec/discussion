@@ -1,5 +1,7 @@
 <script>
-function verify() {
+function verify(event) {
+    event.preventDefault();
+    
     var username = $("#username");
     var password = $("#password");
             
@@ -14,16 +16,15 @@ function verify() {
                    window.location.href = "index.php";
                } else {
                    $("#error").html(errorOriginHtml + " " + data.message)
-                              .removeClass("not-display");
+                              .removeClass("hide");
                    $("#alert").click(function() {
-                       $("#error").addClass("not-display");
+                       $("#error").addClass("hide");
                    });
                }
            },
            "json"
     );
     
-    return false;
 }
 
 $(document).ready(function() {

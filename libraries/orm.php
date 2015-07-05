@@ -18,12 +18,12 @@ class RoleDAO {
             exit; 
         }
         $sql = "insert into t_role (id_role, role_name) ".
-               "values (".$role->getRoleID().", '".$role->getRoleName()."')";
+               "values (".$this->db->escape_str($role->getRoleID()).", '".$this->db->escape_str($role->getRoleName())."')";
         $this->db->send_sql($sql);
         return true;
     }
     public function getRoleByID($roleID) {
-        $sql = "select id_role, role_name from t_role where id_role = ".$roleID;
+        $sql = "select id_role, role_name from t_role where id_role = ".$this->db->escape_str($roleID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -49,8 +49,8 @@ class RoleDAO {
             exit; 
         }
         $sql = "update t_role ".
-               "set role_name = '".$role->getRoleName()."' ".
-               "where id_role = ".$role->getRoleID();
+               "set role_name = '".$this->db->escape_str($role->getRoleName())."' ".
+               "where id_role = ".$this->db->escape_str($role->getRoleID());
         $this->db->send_sql($sql);
         return true;
     }
@@ -91,9 +91,9 @@ class DepartmentDAO {
             exit; 
         }
         $sql = "insert into t_department (id_department, id_parent, department_name) ".
-               "values (".$department->getDepartmentID().", ".
-                          $department->getParentID().", ".
-                        "'".$department->getDepartmentName()."')";
+               "values (".$this->db->escape_str($department->getDepartmentID()).", ".
+                          $this->db->escape_str($department->getParentID()).", ".
+                        "'".$this->db->escape_str($department->getDepartmentName())."')";
         $this->db->send_sql($sql);
         $department->setDepartmentID($this->db->insert_id());
         return true;
@@ -104,18 +104,15 @@ class DepartmentDAO {
             exit; 
         }
         $sql = "update t_department ".
-               "set id_parent = ".$department->getParentID().
-                   "department_name = '".$department->getDepartmentName()."'";
+               "set id_parent = ".$this->db->escape_str($department->getParentID()).
+                   "department_name = '".$this->db->escape_str($department->getDepartmentName())."'";
         $this->db->send_sql($sql);
         return true;
     }
     public function getDepartmentByID($departmentID) {
-        if (isset($this->cache[$departmentID]))
-            return $this->cache[$departmentID];
-        
         $sql = "select id_department, id_parent, department_name ".
                "from t_department ".
-               "where id_department = ".$departmentID;
+               "where id_department = ".$this->db->escape_str($departmentID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -134,7 +131,7 @@ class DepartmentDAO {
         $parentID = $department->getDepartmentID();
         $sql = "select id_department, id_parent, department_name ".
                "from t_department ".
-               "where id_parent = ".$parentID;
+               "where id_parent = ".$this->db->escape_str($parentID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -210,14 +207,14 @@ class UserDAO {
         $sql = "insert into t_user ".
                "(id_role, id_department, username, password, first_name, last_name, gender, photo_url) ".
                "values (".
-                   $user->getRole()->getRoleID().", ".
-                   $user->getDepartment()->getDepartmentID().", ".
-                   "'".$user->getUsername()."', ".
-                   "'".$user->getPassword()."', ".
-                   "'".$user->getFirstName()."', ".
-                   "'".$user->getLastName()."', ".
-                   $user->getGender().", ".
-                   "'".$user->getPhotoUrl()."'".
+                   $this->db->escape_str($user->getRole()->getRoleID()).", ".
+                   $this->db->escape_str($user->getDepartment()->getDepartmentID()).", ".
+                   "'".$this->db->escape_str($user->getUsername())."', ".
+                   "'".$this->db->escape_str($user->getPassword())."', ".
+                   "'".$this->db->escape_str($user->getFirstName())."', ".
+                   "'".$this->db->escape_str($user->getLastName())."', ".
+                   $this->db->escape_str($user->getGender()).", ".
+                   "'".$this->db->escape_str($user->getPhotoUrl())."'".
                ")";
         $this->db->send_sql($sql);
         $user->setUserID($this->db->insert_id());
@@ -227,7 +224,7 @@ class UserDAO {
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
-               "where id_user = ".$userID;
+               "where id_user = ".$this->db->escape_str($userID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -248,7 +245,7 @@ class UserDAO {
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
-               "where username = '".$username."'";
+               "where username = '".$this->db->escape_str($username)."'";
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -273,7 +270,7 @@ class UserDAO {
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
-               "where username = '".$username."' and password = '".$password."'";
+               "where username = '".$this->db->escape_str($username)."' and password = '".$this->db->escape_str($password)."'";
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -298,7 +295,7 @@ class UserDAO {
         $sql = "select ".
                "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
                "from t_user ".
-               "where id_department = ".$department->getDepartmentID();
+               "where id_department = ".$this->db->escape_str($department->getDepartmentID());
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -336,14 +333,14 @@ class UserDAO {
             exit; 
         }
         $sql = "update t_user ".
-        "set id_role = ".$user->getRole()->getRoleID().", ".
-            "id_department = ".$user->getDepartment()->getDepartmentID().", ".
-            "password = '".$user->getPassword()."', ".
-            "first_name = '".$user->getFirstName()."', ".
-            "last_name = '".$user->getLastName()."', ".
-            "gender = ".$user->getGender().", ".
-            "photo_url = '".$user->getPhotoURL()."' ".
-        "where id_user = ".$user->getUserID();
+        "set id_role = ".$this->db->escape_str($user->getRole()->getRoleID()).", ".
+            "id_department = ".$this->db->escape_str($user->getDepartment()->getDepartmentID()).", ".
+            "password = '".$this->db->escape_str($user->getPassword())."', ".
+            "first_name = '".$this->db->escape_str($user->getFirstName())."', ".
+            "last_name = '".$this->db->escape_str($user->getLastName())."', ".
+            "gender = ".$this->db->escape_str($user->getGender()).", ".
+            "photo_url = '".$this->db->escape_str($user->getPhotoURL())."' ".
+        "where id_user = ".$this->db->escape_str($user->getUserID());
         $this->db->send_sql($sql);
         return true;
     }
@@ -456,9 +453,9 @@ class GroupDAO {
         $sql = "insert into t_group ".
                "(id_owner, group_name, activate_status) ".
                "values (".
-                   $group->getOwner()->getUserID().", ".
-                   "'".$group->getGroupName()."', ".
-                   $group->getActivateStatus().")";
+                   $this->db->escape_str($group->getOwner()->getUserID()).", ".
+                   "'".$this->db->escape_str($group->getGroupName())."', ".
+                   $this->db->escape_str($group->getActivateStatus()).")";
         $this->db->send_sql($sql);
         $group->setGroupID($this->db->insert_id());
         return true;
@@ -466,7 +463,7 @@ class GroupDAO {
     public function getGroupByID($groupID) {
         $sql = "select id_group, id_owner, group_name, activate_status ".
                "from t_group ".
-               "where id_group = ".$groupID;
+               "where id_group = ".$this->db->escape_str($groupID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -540,9 +537,9 @@ class GroupMemberDAO {
         $sql = "insert into t_group_member ".
                "(id_group, id_user, accept_status) ".
                "values (".
-                   $groupMember->getGroup()->getGroupID().", ".
-                   $groupMember->getUser()->getUserID().", ".
-                   $groupMember->getAcceptStatus().")";
+                   $this->db->escape_str($groupMember->getGroup()->getGroupID()).", ".
+                   $this->db->escape_str($groupMember->getUser()->getUserID()).", ".
+                   $this->db->escape_str($groupMember->getAcceptStatus()).")";
         $this->db->send_sql($sql);
         return true;
     }
@@ -555,8 +552,8 @@ class GroupMemberDAO {
         $userID = $user->getUserID();
         $sql = "select id_group, id_user, accept_status ".
                "from t_group_member ".
-               "where id_group = ".$groupID." and ".
-                     "id_user = ".$userID;
+               "where id_group = ".$this->db->escape_str($groupID)." and ".
+                     "id_user = ".$this->db->escape_str($userID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -575,7 +572,7 @@ class GroupMemberDAO {
         $userID = $user->getUserID();
         $sql = "select id_group, id_user, accept_status ".
                "from t_group_member ".
-               "where id_user = ".$userID;
+               "where id_user = ".$this->db->escape_str($userID);
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)
@@ -642,12 +639,12 @@ class RecordDAO {
         $sql = "insert into t_record ".
                "(id_group, id_user, message_type, content, time, display_status) ".
                "values (".
-                   $record->getGroup()->getGroupID().", ".
-                   $record->getUser()->getUserID().", ".
-                   $record->getMessageType().", ".
-                   "'".$record->getContent()."', ".
-                   "'".$record->getTime()."', ".
-                   $record->getDisplayStatus().")";
+                   $this->db->escape_str($record->getGroup()->getGroupID()).", ".
+                   $this->db->escape_str($record->getUser()->getUserID()).", ".
+                   $this->db->escape_str($record->getMessageType()).", ".
+                   "'".$this->db->escape_str($record->getContent())."', ".
+                   "'".$this->db->escape_str($record->getTime())."', ".
+                   $this->db->escape_str($record->getDisplayStatus()).")";
         $this->db->send_sql($sql);
         $record->setRecordID($this->db->insert_id());
         return true;

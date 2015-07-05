@@ -44,14 +44,6 @@ function forward($relPath) {
     exit;
 }
 function sendAjaxRes($jsonArray) {
-    if (gettype($jsonArray) != "array" || count($jsonArray) === 0) {
-        echo "ERROR: Argument of sendAjaxRes() isn't an Array or is empty!";
-        exit;
-    }
-    if (!isset($jsonArray["success"]) || !isset($jsonArray["message"])) {
-        echo "ERROR: \$jsonArray should contain \"success\" and \"message\"!";
-        exit;
-    }
     header("Content-type: application/json");
     echo json_encode($jsonArray);
     exit;
@@ -61,19 +53,26 @@ function sendAjaxRes($jsonArray) {
  *     sendAjaxResSuc($message)
  *     sendAjaxResSuc($message, $jsonArray)
  *     sendAjaxResSuc($jsonArray)
+ *     sendAjaxResSuc()
  */
-function sendAjaxResSuc($message, $jsonArray = null) {
-    if (gettype($message) == "array")
+function sendAjaxResSuc($message = null, $jsonArray = null) {
+    if ($message === null && $jsonArray === null)
+        $jsonArray = array();
+    elseif (gettype($message) == "array") {
         $jsonArray = $message;
-    else {
+    } elseif (gettype($message) == "string") {
         if ($jsonArray === null)
             $jsonArray = array();
         $jsonArray["message"] = $message;
-    } 
-       
+    }
     $jsonArray["success"] = true;
     sendAjaxRes($jsonArray);
 }
+/* Usage:
+ *     sendAjaxResErr($message)
+ *     sendAjaxResErr($message, $jsonArray)
+ *     sendAjaxResErr($jsonArray)
+ */
 function sendAjaxResErr($message, $jsonArray = null) {
     if (gettype($message) == "array")
         $jsonArray = $message;
@@ -92,5 +91,6 @@ function sendAjaxRedirect($url) {
     echo json_encode($res);
     exit;
 }
+
 
 ?>

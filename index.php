@@ -7,16 +7,35 @@ if (!isLogin())
     forward("login.php");
 
 //displayIndex();
-temp();
+temp($_SESSION["userID"]);
 
-function temp() {
+function temp($userID) {
     $tpl = new FastTemplate("templates/");
     $tpl->define(array("web_main" => "web_main.html",
                        "web_header" => "web_header.html",
                        "head_script" => "index/head_script.html",
+                       "user" => "index/user.html",
+                       "department" => "index/department.html",
                        "body" => "index/body.html",
                        "web_nav" => "web_nav.html",
                        "web_footer" => "web_footer.html"));
+    
+    $result = findDepartAndUser(1, $userID);
+    if (count($result) === 0)
+        $tpl->assign("INDEX_DEPART_USER", "");
+    else {
+        foreach($result as $node) {
+            if ($node["type"] == 1) {
+                $tpl->assign("INDEX_DEPARTID", $node["id"]);
+                $tpl->assign("INDEX_DEPART_NAME", $node["name"]);
+                $tpl->parse("INDEX_DEPART_USER", ".department");
+            } elseif ($node["type"] == 2) {
+                $tpl->assign("INDEX_USERID", $node["id"]);
+                $tpl->assign("INDEX_USER_NAME", $node["name"]);
+                $tpl->parse("INDEX_DEPART_USER", ".user");
+            }
+        }
+    }
     
     $tpl->assign("TITLE", "Home");
     $tpl->parse("WEB_HEADER", "web_header");

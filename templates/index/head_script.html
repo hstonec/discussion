@@ -1,8 +1,38 @@
 <script>
+function openDepartment(event) {
+    departID = $(this).attr("id");
+    if (departID == "previous") {
+        departID = previousID;
+        previousID = previousIDStack.pop();
+    } else {
+        previousIDStack.push(previousID);
+        previousID = departID;
+    }
+    
+    $.post("ajax_get_depart_user.php",
+           {"departid" : departID},
+           function(data) {
+               $("#departuserpanel").html(data);
+               if ($("#previous").length > 0) {
+                   $("#previous").click(openDepartment);
+               }
+               $("#createGroup").click(function() {
+                   $("#groupModal").modal("show");
+                   return false;
+               });
+           },
+           "text"
+    );
+}
 $(document).ready(function() {
     $("#createGroup").click(function() {
         $("#groupModal").modal("show");
         return false;
     });
+    
+    $("#departuserform div a").click(openDepartment);
+    
+    previousIDStack = [];
+    previousID = 1;
 });
 </script>
