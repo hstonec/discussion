@@ -143,7 +143,7 @@ ALTER TABLE `t_group`
 --
 ALTER TABLE `t_group_member`
   ADD PRIMARY KEY (`id_group`,`id_user`),
-  ADD UNIQUE KEY `index_id_group` (`id_group`),
+  ADD KEY `index_id_group` (`id_group`) USING BTREE,
   ADD KEY `index_id_user` (`id_user`) USING BTREE;
 
 --
