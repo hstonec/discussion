@@ -9,6 +9,17 @@
         </div>
     </div>
     
+	<div class="row">
+		<div id="error" class="col-sm-8 col-sm-push-4 alert alert-danger fade in hide">
+            <a href="#" class="close" id="alerterror">&times;</a>
+            <strong>Error!</strong>
+        </div>
+		<div id="success" class="col-sm-8 col-sm-push-4 alert alert-success fade in hide">
+            <a href="#" class="close" id="alertsuccess">&times;</a>
+            <strong>Success!</strong>
+        </div>
+	</div>
+	
     <div class="row">
         <div class="col-sm-4">
             <!-- list group -->
@@ -21,69 +32,26 @@
                 <a href="#" class="list-group-item" id="6">Record</a>
             </div>
         </div>
-        <div class="col-sm-8" id="div1">
-            <form id="signupform" role="form">
-          <div class="form-group">
-            <label for="username">Username:</label>
-            <a href="#" data-toggle="tooltip" title="Length between 6 to 20, only accepts a-z, A-Z and 0-9" data-placement="top">
-                <input type="text" class="form-control" id="username" placeholder="Enter username">
-            </a>
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <a href="#" data-toggle="tooltip" title="Length between 6 to 20, only accepts a-z, A-Z, !, @, #, $ and 0-9" data-placement="top">
-                <input type="password" class="form-control" id="password" placeholder="Enter password">
-            </a>
-          </div>
-          <div class="form-group">
-            <label for="confirmpw">Confirm Password:</label>
-            <input type="password" class="form-control" id="confirmpw" placeholder="Enter password again">
-          </div>
-          <div class="form-group">
-            <label for="firstname">First Name:</label>
-            <input type="text" class="form-control" id="firstname" placeholder="Enter your first name">
-          </div>
-          <div class="form-group">
-            <label for="lastname">Last Name:</label>
-            <input type="text" class="form-control" id="lastname" placeholder="Enter your last name">
-          </div>
-          <div class="form-group">
-            <label>Gender:</label>
-              <label class="radio-inline"><input type="radio" name="sex" value="1">Male</label>
-          <label class="radio-inline"><input type="radio" name="sex" value="2">Female</label>
-          </div>
-          
-          
-          <div class="form-group">
-            <label for="photo">Upload Photo:</label>
-            <input type="file" class="form-control" id="photo" placeholder="Enter your last name">
-          </div>
-            
-          <hr>
-          <div class="form-group"> 
-            <button type="submit" class="btn btn-default">Submit</button>
-          </div>
-        </form>
-        </div>
+{SETTINGS_PROFILE}
         <div class="col-sm-8 hide" id="div2">
             
             
-                <form id="loginform" class="form-horizontal" role="form">
+                <form id="changepwform" class="form-horizontal" role="form">
                   <div class="form-group">
                     <label class="control-label col-sm-3" for="password">Password:</label>
                     <div class="col-sm-9">
                       <input type="password" class="form-control" id="password" placeholder="Enter password">
                     </div>
                   </div><div class="form-group">
-                    <label class="control-label col-sm-3" for="password">New Password:</label>
+                    <label class="control-label col-sm-3" for="newpassword">New Password:</label>
                     <div class="col-sm-9">
-                      <input type="password" class="form-control" id="password" placeholder="Enter password">
+                      <input type="password" class="form-control" id="newpassword" placeholder="Enter password">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="control-label col-sm-3" for="password">Confirm Password:</label>
+                    <label class="control-label col-sm-3" for="confirmpw">Confirm Password:</label>
                     <div class="col-sm-9">
-                      <input type="password" class="form-control" id="password" placeholder="Enter password">
+                      <input type="password" class="form-control" id="confirmpw" placeholder="Enter password">
                     </div>
                   </div>
                   <div class="form-group"> 

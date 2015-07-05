@@ -1,0 +1,33 @@
+<div class="col-sm-8" id="div1">
+	<form id="profileform" role="form">
+  <div class="form-group">
+	<label for="profile_username">Username:</label>
+	<input type="text" class="form-control" value="{SETTINGS_PROFILE_USERNAME}" disabled>
+  </div>
+
+  <div class="form-group">
+	<label for="profile_firstname">First Name:</label>
+	<input type="text" class="form-control" id="profile_firstname" placeholder="Enter your first name" value="{SETTINGS_PROFILE_FIRST}">
+  </div>
+  <div class="form-group">
+	<label for="profile_lastname">Last Name:</label>
+	<input type="text" class="form-control" id="profile_lastname" placeholder="Enter your last name" value="{SETTINGS_PROFILE_LAST}">
+  </div>
+  <div class="form-group">
+	<label>Gender:</label>
+	<label class="radio-inline"><input type="radio" id="sexm" name="sex" value="1" {SETTINGS_PROFILE_MALE}>Male</label>
+    <label class="radio-inline"><input type="radio" id="sexf" name="sex" value="2" {SETTINGS_PROFILE_FEMALE}>Female</label>
+  </div>
+  
+  
+  <div class="form-group">
+	<label for="profile_photo">Upload Photo:</label>
+	<input type="file" class="form-control" id="photo" placeholder="Enter your last name">
+  </div>
+	
+  <hr>
+  <div class="form-group"> 
+	<button type="submit" class="btn btn-default">Submit</button>
+  </div>
+</form>
+</div>

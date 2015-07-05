@@ -1,7 +1,80 @@
-<script>    
+<script>  
+function changepw(event) {
+	event.preventDefault();
+	
+	var password = $("#password");
+	var newpassword = $("#newpassword");
+	var confirmpw = $("#confirmpw");
+	
+	$.post("ajax_change_pw.php", 
+		{"password": password.val(),
+		 "newpassword": newpassword.val(),
+		 "confirmpw": confirmpw.val()},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+				$("#success").html(successOriginHtml + " " + data.message)
+				             .removeClass("hide");
+				$("#alertsuccess").click(function(){
+					$("#success").addClass("hide");
+				});
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);	
+}
+
+function changeprofile(event) {
+	event.preventDefault();
+	
+	var profile_firstname = $("#profile_firstname");
+	var profile_lastname = $("#profile_lastname");
+	var sexm = $("#sexm");
+	var sexf = $("#sexf");
+	var sex;
+	if (sexm.prop("checked"))
+		sex = sexm;
+	else
+		sex = sexf;
+	
+	$.post("ajax_change_profile.php", 
+		{"profile_firstname": profile_firstname.val(),
+		 "profile_lastname": profile_lastname.val(),
+		 "sex": sex.val()},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+				$("#success").html(successOriginHtml + " " + data.message)
+				             .removeClass("hide");
+				$("#alertsuccess").click(function(){
+					$("#success").addClass("hide");
+				});
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);	
+}
+  
 $(document).ready(function() {
+   errorOriginHtml = $("#error").html();
+   successOriginHtml = $("#success").html();
    lastID = "1";
-    
    $(".list-group-item").click(function() {
        thisID = $(this).attr("id");
        
@@ -13,6 +86,11 @@ $(document).ready(function() {
        
        $("#div" + thisID).removeClass("hide");
        lastID = thisID;
+	   
    }); 
+   
+	$("#changepwform").submit(changepw);
+	$("#profileform").submit(changeprofile);
+	
 });
 </script>
