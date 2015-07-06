@@ -468,13 +468,83 @@ class GroupDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $owner = $userDAO->getUserByID($row["id_owner"]);
+        $owner = $this->userDAO->getUserByID($row["id_owner"]);
         return new Group(
             $owner,
             $row["group_name"],
             $row["activate_status"],
             $row["id_group"]
         );
+    }
+    public function updateGroup($group) {
+        if (gettype($group) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "update t_group ".
+               "set id_owner = ".$this->db->escape_str($group->getOwner()->getUserID()).", ".
+               "group_name = '".$this->db->escape_str($group->getGroupName())."', ".
+               "activate_status = ".$this->db->escape_str($group->getActivateStatus())." ".
+               "where id_group = ".$this->db->escape_str($group->getGroupID());
+        $this->db->send_sql($sql);
+        return true;
+    }
+    public function getAllGroups() {
+        $sql = "select id_group, id_owner, group_name, activate_status ".
+               "from t_group";
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $owner = $this->userDAO->getUserByID($row["id_owner"]);
+        $groupsArr = array();
+        $groupsArr[] = new Group(
+            $owner,
+            $row["group_name"],
+            $row["activate_status"],
+            $row["id_group"]
+        );
+        while ($row = $this->db->next_row()) {
+            $owner = $this->userDAO->getUserByID($row["id_owner"]);
+            $groupsArr[] = new Group(
+            $owner,
+            $row["group_name"],
+            $row["activate_status"],
+            $row["id_group"]
+        );
+        }
+        return $groupsArr;
+    }
+    public function getGroupsByOwner($owner) {
+        if (gettype($owner) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $sql = "select id_group, id_owner, group_name, activate_status ".
+               "from t_group ".
+               "where id_owner = ".$this->db->escape_str($owner->getUserID());
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $groupsArr = array();
+        $newOwner = $this->userDAO->getUserByID($row["id_owner"]);
+        $groupsArr[] = new Group(
+            $newOwner,
+            $row["group_name"],
+            $row["activate_status"],
+            $row["id_group"]
+        );
+        while ($row = $this->db->next_row()) {
+            $newOwner = $this->userDAO->getUserByID($row["id_owner"]);
+            $groupsArr[] = new Group(
+            $newOwner,
+            $row["group_name"],
+            $row["activate_status"],
+            $row["id_group"]
+        );
+        }
+        return $groupsArr;
     }
 }
 class Group {

@@ -23,6 +23,9 @@ function displaySettings() {
 	//display profile
 	displayProfile($user, $tpl);
 	
+    //display group
+    displayGroup($user, $tpl);
+    
     $tpl->assign("TITLE", "My Profile");
     $tpl->parse("WEB_HEADER", "web_header");
     $tpl->parse("HEAD_SCRIPT", "head_script");
@@ -47,6 +50,44 @@ function displayProfile($user, $tpl) {
 		$tpl->assign("SETTINGS_PROFILE_FEMALE", "checked");
 	}
 		
+}
+
+function displayGroup($user, $tpl) {
+    $tpl->define(array("group" => "settings/group.html",
+                       "group_tr" => "settings/group_tr.html",
+                       "group_td" => "settings/group_td.html",
+                       "group_delete" => "settings/group_delete.html"));
+    
+    $roleID = $user->getRole()->getRoleID();
+    $groupDAO = new GroupDAO();
+    if ($roleID === "1" || $roleID === "2") {
+        $tpl->parse("SETTINGS_GROUP_TD_DELETE", "group_delete");
+        $groups = $groupDAO->getAllGroups();
+    } elseif ($roleID === "3") {
+        $tpl->assign("SETTINGS_GROUP_TD_DELETE", "");
+        $groups = $groupDAO->getGroupsByOwner($user);
+    }
+    if ($groups === null) {
+        $tpl->assign("SETTINGS_GROUP_TR", "");
+    } else {
+        foreach ($groups as $group) {
+            $currentStatus = $group->getActivateStatus(); 
+            if ($currentStatus == "1") {
+                $tpl->assign("SETTINGS_GROUP_TD_CURR_NAME", "Activated");
+                $tpl->assign("SETTINGS_GROUP_TD_CHAN_STATUS", "2");
+                $tpl->assign("SETTINGS_GROUP_TD_CHAN_NAME", "Block");
+            } elseif ($currentStatus == "2") {
+                $tpl->assign("SETTINGS_GROUP_TD_CURR_NAME", "Blocked");
+                $tpl->assign("SETTINGS_GROUP_TD_CHAN_STATUS", "1");
+                $tpl->assign("SETTINGS_GROUP_TD_CHAN_NAME", "Activate");
+            }
+            $tpl->parse("SETTINGS_GROUP_TD", "group_td");
+            $tpl->assign("SETTINGS_GROUP_TR_GROUPNAME", $group->getGroupName());
+            $tpl->assign("SETTINGS_GROUP_TR_USERNAME", $group->getOwner()->getUsername());
+            $tpl->parse("SETTINGS_GROUP_TR", ".group_tr");
+        }
+    }
+    $tpl->parse("SETTINGS_GROUP", "group");
 }
 
 
