@@ -70,6 +70,52 @@ function changeprofile(event) {
 		"json"
 	);	
 }
+    
+function changegroup(event) {
+    event.preventDefault();
+    var newstatus = $(this).attr("value");
+    var groupid = $(this).parent().parent().attr("value");
+    clickedGroup = $(this);
+    
+    
+    $.post("ajax_change_group_status.php", 
+		{"groupid": groupid,
+		 "newstatus": newstatus},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+                var oldValue = clickedGroup.attr("value");
+                var buttonEle = clickedGroup.parent().parent().prev();
+                if (oldValue == "1") {
+                    clickedGroup.attr("value", "2");
+                    clickedGroup.text("Blocked");
+                    buttonEle.html("Activated" + " <span class=\"caret\"></span>");
+                } else if (oldValue == "2") {
+                    clickedGroup.attr("value", "1");
+                    clickedGroup.text("Activated");
+                    buttonEle.html("Blocked" + " <span class=\"caret\"></span>");
+                } else if (oldValue == "3") {
+                    buttonEle.parent().parent().parent().remove();
+                }
+				$("#success").html(successOriginHtml + " " + data.message)
+				             .removeClass("hide");
+				$("#alertsuccess").click(function(){
+					$("#success").addClass("hide");
+				});
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);
+    
+}
   
 $(document).ready(function() {
    errorOriginHtml = $("#error").html();
@@ -91,6 +137,8 @@ $(document).ready(function() {
    
 	$("#changepwform").submit(changepw);
 	$("#profileform").submit(changeprofile);
+    
+    $("#grouptable li a").click(changegroup);
 	
 });
 </script>

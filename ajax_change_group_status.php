@@ -15,8 +15,8 @@ if (isset($_POST["groupid"]) && isset($_POST["newstatus"])) {
 }
 
 function executeChange($userID, $groupID, $newStatus) {
-    $newStatus = (int)$newStatus;
-    if ($newStatus !== 1 && $newStatus !== 2 && $newStatus !== 3)
+    $newStatus = $newStatus;
+    if ($newStatus !== "1" && $newStatus !== "2" && $newStatus !== "3")
         return "Invalid status!";
     $userDAO = new UserDAO();
     $user = $userDAO->getUserByID($userID);
@@ -27,18 +27,25 @@ function executeChange($userID, $groupID, $newStatus) {
         return "Could not find this group!";
     if ($group->getActivateStatus() === $newStatus)
         return "Old status is equal to new status, don't need to change!";
-    if ($user->getRole()->getRoleID() === 3) {
+    if ($user->getRole()->getRoleID() === "3") {
         if ($group->getOwner()->getUserID() !== $userID)
             return "You have no right to change group status!";
-        if ($newStatus === 3)
+        if ($newStatus === "3")
             return "You have no right to delete this group!";
     }
     
-    if ($newStatus !== 3) {
+    if ($newStatus !== "3") {
         $group->setActivateStatus($newStatus);
         $groupDAO->updateGroup($group);
     } else {
-        
+        //delete records
+        $recordDAO = new RecordDAO();
+        $recordDAO->deleteRecordsByGroup($group);
+        //delete groupmember
+        $gmDAO = new GroupMemberDAO();
+        $gmDAO->deleteGroupMembersByGroup($group);
+        //delete group
+        $groupDAO->deleteGroup($group);
     }
     return true;
 }

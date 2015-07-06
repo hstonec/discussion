@@ -327,6 +327,42 @@ class UserDAO {
         }
         return $usersArr;
     }
+    public function getUsersByRoleID($roleID) {
+        $sql = "select ".
+               "id_user, id_role, id_department, username, password, first_name, last_name, gender, photo_url ".
+               "from t_user ".
+               "where id_role = ".$this->db->escape_str($roleID);
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $role = $this->roleDAO->getRoleByID($row["id_role"]);
+        $department = $this->departmentDAO->getDepartmentByID($row["id_department"]);
+        $arr = array();
+        $arr[] = new User($role,
+                       $department,
+                       $row["username"],
+                       $row["password"],
+                       $row["first_name"],
+                       $row["last_name"],
+                       $row["gender"],
+                       $row["photo_url"],
+                       $row["id_user"]);
+        while ($row = $this->db->next_row()) {
+            $role = $this->roleDAO->getRoleByID($row["id_role"]);
+            $department = $this->departmentDAO->getDepartmentByID($row["id_department"]);
+            $arr[] = new User($role,
+                       $department,
+                       $row["username"],
+                       $row["password"],
+                       $row["first_name"],
+                       $row["last_name"],
+                       $row["gender"],
+                       $row["photo_url"],
+                       $row["id_user"]);
+        }
+        return $arr;
+    }
     public function updateUser($user) {
         if (gettype($user) != "object") { 
             echo "ERROR: Wrong argument type!"; 
@@ -546,6 +582,15 @@ class GroupDAO {
         }
         return $groupsArr;
     }
+    public function deleteGroup($group) {
+        if (gettype($group) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $sql = "delete from t_group where id_group = ".$this->db->escape_str($group->getGroupID());
+        $this->db->send_sql($sql);
+        return true;
+    }
 }
 class Group {
     private $groupID;
@@ -665,6 +710,15 @@ class GroupMemberDAO {
         }
         return $gmArr;
     }
+    public function deleteGroupMembersByGroup($group) {
+        if (gettype($group) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $sql = "delete from t_group_member where id_group = ".$this->db->escape_str($group->getGroupID());
+        $this->db->send_sql($sql);
+        return true;
+    }
 }
 class GroupMember {
     private $group;
@@ -717,6 +771,15 @@ class RecordDAO {
                    $this->db->escape_str($record->getDisplayStatus()).")";
         $this->db->send_sql($sql);
         $record->setRecordID($this->db->insert_id());
+        return true;
+    }
+    public function deleteRecordsByGroup($group) {
+        if (gettype($group) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "delete from t_record where id_group = ".$this->db->escape_str($group->getGroupID());
+        $this->db->send_sql($sql);
         return true;
     }
 }

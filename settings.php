@@ -61,11 +61,11 @@ function displayGroup($user, $tpl) {
     $roleID = $user->getRole()->getRoleID();
     $groupDAO = new GroupDAO();
     if ($roleID === "1" || $roleID === "2") {
-        $tpl->parse("SETTINGS_GROUP_TD_DELETE", "group_delete");
         $groups = $groupDAO->getAllGroups();
+        $tpl->parse("SETTINGS_GROUP_TD_DELETE", "group_delete");
     } elseif ($roleID === "3") {
-        $tpl->assign("SETTINGS_GROUP_TD_DELETE", "");
         $groups = $groupDAO->getGroupsByOwner($user);
+        $tpl->assign("SETTINGS_GROUP_TD_DELETE", "");
     }
     if ($groups === null) {
         $tpl->assign("SETTINGS_GROUP_TR", "");
@@ -81,6 +81,7 @@ function displayGroup($user, $tpl) {
                 $tpl->assign("SETTINGS_GROUP_TD_CHAN_STATUS", "1");
                 $tpl->assign("SETTINGS_GROUP_TD_CHAN_NAME", "Activate");
             }
+            $tpl->assign("SETTINGS_GROUP_GROUPID", $group->getGroupID());
             $tpl->parse("SETTINGS_GROUP_TD", "group_td");
             $tpl->assign("SETTINGS_GROUP_TR_GROUPNAME", $group->getGroupName());
             $tpl->assign("SETTINGS_GROUP_TR_USERNAME", $group->getOwner()->getUsername());
