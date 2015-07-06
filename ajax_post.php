@@ -32,6 +32,14 @@ function postRecord($userID, $groupID, $messageType, $content) {
     if (gettype($content) != "string" || strlen($content) > 1000)
         return "Wrong type content or exceed max length(1000)!";
     
+    if ($messageType == "4") {
+        if (!preg_match("/^http:\/\//i", $content))
+            return "Only accept http url!";
+        $content = substr($content, 7);
+        if ($content === "")
+            return "Invalid url!";
+    }
+    
     
     $groupDAO = new GroupDAO();
     $group = $groupDAO->getGroupByID($groupID);
@@ -56,9 +64,9 @@ function postRecord($userID, $groupID, $messageType, $content) {
     return true;
 }
 
-function isValidMessage($messageType) {
+function isValidMessageType($messageType) {
     if ($messageType === "1" ||
-        $messageType === "2" ||
+        //$messageType === "2" || will automatically check if it is an image
         $messageType === "3" ||
         $messageType === "4")
         return true;

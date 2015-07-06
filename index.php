@@ -6,10 +6,9 @@ require_once("libraries/class.FastTemplate.php");
 if (!isLogin())
     forward("login.php");
 
-//displayIndex();
-temp($_SESSION["userID"]);
+displayIndex($_SESSION["userID"]);
 
-function temp($userID) {
+function displayIndex($userID) {
     $tpl = new FastTemplate("templates/");
     $tpl->define(array("web_main" => "web_main.html",
                        "web_header" => "web_header.html",
@@ -80,9 +79,19 @@ function temp($userID) {
                     $commentUser = $rec->getUser();
                     $tpl->assign("INDEX_GROUP_COMMENT_USERPHOTO", $commentUser->getPhotoURL());
                     $tpl->assign("INDEX_GROUP_COMMENT_USERNAME", $commentUser->getFirstName()." ".$commentUser->getLastName());
-                        
                     $tpl->assign("INDEX_GROUP_COMMENT_TIME", $rec->getTime());        
-                    $tpl->assign("INDEX_GROUP_COMMENT_CONTENT", $rec->getContent());
+                    
+                    
+                    $type = $rec->getMessageType();
+                    $con = $rec->getContent();
+                    if ($type == "1")
+                        $tpl->assign("INDEX_GROUP_COMMENT_CONTENT", htmlentities($con));
+                    if ($type == "4") {
+                        $tpl->assign("INDEX_GROUP_CONTENT_LINKURL", "http://".rawurlencode($con));
+                        $tpl->assign("INDEX_GROUP_CONTENT_LINKNAME", htmlentities($con));
+                        $tpl->parse("INDEX_GROUP_COMMENT_CONTENT", "link");
+                    }
+                    
                     $tpl->parse("INDEX_GROUP_COMMENT", ".comment");
                 }
             }
@@ -123,100 +132,5 @@ function temp($userID) {
     $tpl->FastPrint();
 }
 
-function displayIndex() {
-    $tpl = new FastTemplate("templates/");
-    $tpl->define(array("main" => "index/main.html",
-                       "rootul" => "index/rootul.html",
-                       "li" => "index/li.html",
-                       "liul" => "index/liul.html",
-                       "groupul" => "index/groupul.html",
-                       "groupli" => "index/groupli.html",
-                       "grouptab" => "index/grouptab.html"));
-    $userDAO = new UserDAO();
-    $loginUser = $userDAO->getUserByID($_SESSION["userID"]);
-    
-    //display root department and user
-    $deptDAO = new DepartmentDAO();
-    $rootDepart = $deptDAO->getDepartmentByID(1);
-    //find user belonged to the root
-    $users = $userDAO->getUsersByDepartment($rootDepart);
-    if ($users !== null) {
-        foreach ($users as $user) {
-            //ignore myself
-            if ($user->getUserID() == $loginUser->getUserID())
-                continue;
-            $tpl->assign("INDEX_USERID", (string)$user->getUserID());
-            $tpl->assign("INDEX_USERNAME", $user->getFirstName()." ".$user->getLastName());
-            $tpl->parse("INDEX_ROOTLI", ".li");
-        }
-    }
-    //find department belonged to the root
-    $childsDepart = $deptDAO->getChildDepartments($rootDepart);
-    if ($childsDepart !== null) {
-        foreach ($childsDepart as $depart) {
-            //ignore root folder
-            if ($depart->getDepartmentID() === $depart->getParentID())
-                continue;
-            $tpl->assign("INDEX_DEPTNAME", $depart->getDepartmentName());
-            $tpl->parse("INDEX_ROOTLI", ".liul");
-        }
-    }
-    $tpl->parse("INDEX_DEPART", "rootul");
-    
-    //display groups which belongs to this user
-    $gmDAO = new GroupMemberDAO();
-    $groupMembers = $gmDAO->getGroupMembersByUser($loginUser);
-    if ($groupMembers !== null)
-        foreach ($groupMembers as $gm) {
-            //display group ul
-            $group = $gm->getGroup();
-            $tpl->assign("INDEX_GROUPID", $group->getGroupID());
-            $tpl->assign("INDEX_GROUPNAME", $group->getGroupName());
-            $tpl->parse("INDEX_GROUPLI", ".groupli");
-            //display group tab
-            $tpl->parse("INDEX_GROUPTAB", ".grouptab");
-        }
-    else {
-        $tpl->assign("INDEX_GROUPLI", "");
-        $tpl->assign("INDEX_GROUPTAB", "You didn't have any group!");
-    }
-        
-    $tpl->parse("INDEX_GROUPUL", "groupul");
-    
-    
-    $tpl->assign("INDEX_FIRST", $loginUser->getFirstName());
-    
-    
-    $tpl->parse("MAIN", "main");
-    $tpl->FastPrint();
-    
-}
 
-
-
-function isGroupActivate($group) {
-    if ($group->getActivateStatus() === 1)
-        return true;
-    else
-        return false;
-}
-
-function getDepartments() {
-    $deptDAO = new DepartmentDAO();
-    $root = $deptDAO->getDepartmentByID(1);
-    return getDeptTree($root, $deptDAO);
-}
-function getDeptTree($root, $deptDAO) {
-    $arr = array("id" => $root->getDepartmentID(),
-                 "name" => $root->getDepartmentName());
-    $child = $deptDAO->getChildDepartments($root);
-    if ($child === null)
-        $arr["child"] = false; 
-    else {
-        $arr["child"] = array();
-        foreach ($child as $childDept)
-            $arr["child"][] = getDeptTree($root, $deptDAO);
-    }
-    return $child;
-}
 ?>

@@ -768,7 +768,7 @@ class RecordDAO {
                    $this->db->escape_str($record->getUser()->getUserID()).", ".
                    $this->db->escape_str($record->getMessageType()).", ".
                    "'".$this->db->escape_str($record->getContent())."', ".
-                   "'".$this->db->escape_str($record->getTime())."', ".
+                   "CURRENT_TIMESTAMP, ".
                    $this->db->escape_str($record->getDisplayStatus()).")";
         $this->db->send_sql($sql);
         $record->setRecordID($this->db->insert_id());

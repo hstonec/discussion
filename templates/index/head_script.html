@@ -87,16 +87,19 @@ function submitNewGroup(event) {
     
 function switchTab(event) {
     event.preventDefault();
-    alert("adfadsf");
+    var activeID = $(this).attr("value");
+    $(this).siblings().removeClass("active");
+    $(this).addClass("active");
+    
+    $("#commenttext").addClass("hide");
+    $("#commentfile").addClass("hide");
+    $("#commentlink").addClass("hide");
+    
+    $("#" + activeID).removeClass("hide");
 }
     
-function submitTextPost(event) {
-    event.preventDefault();
-    var content = $("#commenttext").find("textarea").val();
-    var groupid = $("#" + lastID).val();
-    alert($("#" + lastID).val());
-    var messagetype = "1";
     
+function submitPost(content, groupid, messagetype) {
     $.post("ajax_post.php",
           { "groupid" : groupid,
             "messagetype" : messagetype,
@@ -115,13 +118,30 @@ function submitTextPost(event) {
            },
            "json"
     );
-    
 }
+    
+function submitTextPost(event) {
+    event.preventDefault();
+    var content = $("#commenttextarea").val();
+    var groupid = $("#" + lastID).attr("value");
+    var messagetype = "1";
+    
+    submitPost(content, groupid, messagetype);
+}
+    
+function submitLinkPost(event) {
+    event.preventDefault();
+    var content = $("#commentlinkcontent").val();
+    var groupid = $("#" + lastID).attr("value");
+    var messagetype = "4";
+    submitPost(content, groupid, messagetype)
+}    
+
 $(document).ready(function() {
-    
-    
     lastID = "listitem1";
-    $(".list-group-item").click(function() {
+    $(".list-group-item").click(function(event) {
+        event.preventDefault();
+        
         thisID = $(this).attr("id");
 
         $("#" + lastID).removeClass("active");
@@ -143,6 +163,8 @@ $(document).ready(function() {
     $("#newgroupform").submit(submitNewGroup);
     $("#commenttab").children().click(switchTab);
     $("#commenttext").submit(submitTextPost);
+    $("#commentlink").submit(submitLinkPost);
+    
     $("#commentalert").click(closeCommentAlert);
     
     parentStack = [];
