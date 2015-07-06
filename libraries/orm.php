@@ -821,6 +821,22 @@ class RecordDAO {
         }
         return $arr;
     }
+    public function updateRecord($record) {
+        if (gettype($record) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "update t_record ".
+            "set id_group = ".$this->db->escape_str($record->getGroup()->getGroupID()).", ".
+            "id_user = ".$this->db->escape_str($record->getUser()->getUserID()).", ".
+            "message_type = ".$this->db->escape_str($record->getMessageType()).", ".
+            "content = '".$this->db->escape_str($record->getContent())."', ".
+            "time = '".$this->db->escape_str($record->getTime())."', ".
+            "display_status = ".$this->db->escape_str($record->getDisplayStatus()).
+            "where id_record = ".$this->db->escape_str($record->getRecordID());
+        $this->db->send_sql($sql);
+        return true;
+    }
 }
 class Record {
     private $recordID;

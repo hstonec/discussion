@@ -67,7 +67,7 @@ function postRecord($userID, $groupID, $messageType, $content) {
 function isValidMessageType($messageType) {
     if ($messageType === "1" ||
         //$messageType === "2" || will automatically check if it is an image
-        $messageType === "3" ||
+        //$messageType === "3" ||
         $messageType === "4")
         return true;
     else

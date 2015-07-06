@@ -52,12 +52,21 @@ function isValidUploadFile($error) {
 }
 function isValidImage($filename) {
     $validExt = array("jpg", "jpeg", "gif", "png");
-    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     if (in_array($ext, $validExt))
         return true;
     else
         return "Unsupported file format, photo must be a jpeg/jpg/gif/png!";
 }
+function isValidFile($filename) {
+    $validExt = array("zip");
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if (in_array($ext, $validExt))
+        return true;
+    else
+        return "Unsupported file format, file must be a zip!";
+}
+
 
 function encryptPassword($password) {
     return password_hash($password, PASSWORD_BCRYPT);
