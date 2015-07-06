@@ -1,16 +1,13 @@
 <script>
 function createGroup(event) {
-    event.preventDefault();
     $("#groupModal").modal("show");
-    return false;
 }
 
 function openDepartment(event) {
     event.preventDefault();
-    departID = $(this).attr("id");
+    departID = $(this).attr("value");
     if (departID == "previous") {
         departID = parentStack.pop();
-        
     } else {
         if (parentStack.length == 0)
             parentStack.push(1);
@@ -25,17 +22,131 @@ function openDepartment(event) {
                $("#departuserpanel").html(data);
                if ($("#departuserform div a").length > 0)
                    $("#departuserform div a").click(openDepartment);
-               if ($("#previous").length > 0)
-                   $("#previous").click(openDepartment);
+               if ($("#previousdepart").length > 0)
+                   $("#previousdepart").click(openDepartment);
+               if ($("#departuserform input[type=\"checkbox\"]").length > 0) {
+                   $("#departuserform input[type=\"checkbox\"]").change(changeCheckbox);
+                   $("#departuserform input[type=\"checkbox\"]").each(verifyChecked);
+               }
+               $("#departalert").click(closeAlert);
                $("#createGroup").click(createGroup);
            },
            "text"
     );
 }
+
+function changeCheckbox(event) {
+    var changedBox = $(this);
+    var userID = changedBox.val();
+    if(changedBox.prop("checked"))
+        checkedUser.push(userID);
+    else {
+        var index = checkedUser.indexOf(userID);
+        checkedUser.splice(index, 1);
+    }
+}
+function verifyChecked() {
+    var userID = $(this).val();
+    var index = checkedUser.indexOf(userID);
+    if (index != -1)
+        $(this).prop("checked", true);
+}
+
+function closeAlert(event) {
+    event.preventDefault();
+    $("#newgrouperror").addClass("hide");
+}
+
+function closeCommentAlert(event) {
+    event.preventDefault();
+    $("#commenterror").addClass("hide");
+}
+    
+function submitNewGroup(event) {
+    event.preventDefault();
+    var groupName = $("#groupName");
+    
+    $.post("ajax_create_group.php",
+          { "groupmember" : checkedUser,
+            "groupname" : groupName.val()},
+           function(data) {
+               if (data.hasOwnProperty("url")) {
+                   window.location.href = data.url;
+               }
+               if (data.success) {
+                   window.location.href = "index.php";
+               } else {
+                   $("#newgrouperror").html(errorOriginHtml + " " + data.message)
+                              .removeClass("hide");
+                   $("#newgroupalert").click(closeAlert);
+               }
+           },
+           "json"
+    );
+}
+    
+function switchTab(event) {
+    event.preventDefault();
+    alert("adfadsf");
+}
+    
+function submitTextPost(event) {
+    event.preventDefault();
+    var content = $("#commenttext").find("textarea").val();
+    var groupid = $("#" + lastID).val();
+    alert($("#" + lastID).val());
+    var messagetype = "1";
+    
+    $.post("ajax_post.php",
+          { "groupid" : groupid,
+            "messagetype" : messagetype,
+            "content" : content},
+           function(data) {
+               if (data.hasOwnProperty("url")) {
+                   window.location.href = data.url;
+               }
+               if (data.success) {
+                   window.location.href = "index.php";
+               } else {
+                   $("#commenterror").html(errorOriginHtml + " " + data.message)
+                              .removeClass("hide");
+                   $("#commentalert").click(closeCommentAlert);
+               }
+           },
+           "json"
+    );
+    
+}
 $(document).ready(function() {
+    
+    
+    lastID = "listitem1";
+    $(".list-group-item").click(function() {
+        thisID = $(this).attr("id");
+
+        $("#" + lastID).removeClass("active");
+        $(this).addClass("active");
+
+        $("#pageheader").text($(this).text());
+        $("#div" + lastID).addClass("hide");
+
+        $("#div" + thisID).removeClass("hide");
+        lastID = thisID;
+
+    }); 
+    
+    
     $("#createGroup").click(createGroup);
     $("#departuserform div a").click(openDepartment);
+    $("#departuserform input[type=\"checkbox\"]").change(changeCheckbox);
+    $("#newgroupalert").click(closeAlert);
+    $("#newgroupform").submit(submitNewGroup);
+    $("#commenttab").children().click(switchTab);
+    $("#commenttext").submit(submitTextPost);
+    $("#commentalert").click(closeCommentAlert);
     
     parentStack = [];
+    checkedUser = [];
+    errorOriginHtml = $("#newgrouperror").html();
 });
 </script>

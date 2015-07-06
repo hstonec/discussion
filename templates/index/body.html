@@ -4,8 +4,7 @@
     <div class="row">
         <div class="col-sm-7 col-sm-push-3">
             <div class="page-header">
-                <h1>Group Name 1</h1>
-                <p>Created by <a href="#">Anakin Skywalker</a></p>
+                <h1 id="pageheader">{INDEX_GROUP_HEADER}</h1>
             </div>
         </div>
     </div>
@@ -16,93 +15,18 @@
 
             <!-- list group -->
             <div class="list-group margin-b-3">
-                <a href="#" class="active list-group-item">Group Name 1</a>
-                <a href="#" class="list-group-item">Group Name 2</a>
-                <a href="#" class="list-group-item">Group Name 3</a>
+{INDEX_LIST_ITEM_LI}
             </div>
         </div>
-        <div class="col-sm-7 col-sm-push-1">
-
-            <!-- Comments -->
-            <div class="well">
-                <div class="media">
-                    <div class="media-left">
-                        <img src="http://placehold.it/70x70" alt="">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="margin-t-0">Shicong Huang</h4>
-                        <p><a href="#">12 June 2015 11:13 pm</a></p>
-                        <p>Hello, everyone!</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="well">
-                <div class="media">
-                    <div class="media-left">
-                        <img src="http://placehold.it/70x70" alt="">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="margin-t-0">Shicong Huang</h4>
-                        <p><a href="#">12 June 2015 11:13 pm</a></p>
-                        <p>Hello, everyone!</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="well">
-                <div class="media">
-                    <div class="media-left">
-                        <img src="http://placehold.it/70x70" alt="">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="margin-t-0">Shicong Huang</h4>
-                        <p><a href="#">12 June 2015 11:13 pm</a></p>
-                        <p>Hello, everyone!</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="well">
-                <div class="media">
-                    <div class="media-left">
-                        <img src="http://placehold.it/70x70" alt="">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="margin-t-0">Shicong Huang</h4>
-                        <p><a href="#">12 June 2015 11:13 pm</a></p>
-                        <p>Hello, everyone!</p>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- Comment form -->
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="">Leave a Post</a></li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Upload File<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="">Image</a></li>
-                        <li><a href="">Other</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Create Link</a></li>
-            </ul>
-
-            <div class="well margin-t-h">
-                <form>
-                    <div class="form-group">
-                        <label for="contactComment">Content</label>
-                        <textarea class="form-control" id="contactComment"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
-
-        </div>
+{INDEX_GROUP}
         <div class="col-sm-3 col-sm-pull-9">
+            <div class="alert alert-info">
+                <strong>Info!</strong> Indicates a neutral informative change or action.
+            </div>
+            <div class="alert alert-info">
+                <strong>Info!</strong> Indicates a neutral informative change or action.
+            </div>
+            
             <!-- Search -->
             <div class="well">
                 <h4 class="margin-t-0">Search</h4>
@@ -142,6 +66,31 @@
     </div>
     <!-- /.row -->
 
+    <div class="row">
+        <div class="col-sm-7 col-sm-push-3">
+            <hr>
+            <!-- Comment form -->
+            <ul id="commenttab" class="nav nav-tabs">
+                <li class="active"><a href="">Leave a Post</a></li>
+                <li><a href="#">Upload File</a></li>
+                <li><a href="#">Create Link</a></li>
+            </ul>
+            <div id="commenterror" class="alert alert-danger fade in margin-t-h margin-b-h hide">
+                    <a href="#" class="close" id="commentalert">&times;</a>
+                    <strong>Error!</strong>
+            </div>
+            <div class="well margin-t-h">
+                <form id="commenttext">
+                    <div class="form-group">
+                        <label for="contactComment">Content</label>
+                        <textarea class="form-control" id="contactComment"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 {WEB_FOOTER}
 </div>
 <!-- Modal -->
@@ -156,8 +105,12 @@
                 <h4 class="modal-title">Create New Group</h4>
               </div>
                 
-              <div class="modal-body">  
-                <form class="form-horizontal" role="form">
+              <div class="modal-body">
+                <div id="newgrouperror" class="alert alert-danger fade in hide">
+                    <a href="#" class="close" id="newgroupalert">&times;</a>
+                    <strong>Error!</strong>
+                </div>
+                <form id="newgroupform" class="form-horizontal" role="form">
                   <div class="form-group">
                     <label class="control-label col-sm-3" for="groupName">Group Name:</label>
                     <div class="col-sm-9">

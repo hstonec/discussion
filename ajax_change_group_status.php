@@ -2,7 +2,7 @@
 require_once("libraries/head.php");
 
 if (!isLogin())
-    sendAjaxRedirect("index.php");
+    sendAjaxRedirect("login.php");
 
 if (isset($_POST["groupid"]) && isset($_POST["newstatus"])) {
     if (!isValidID($_POST["groupid"]) || !isValidID($_POST["newstatus"]))

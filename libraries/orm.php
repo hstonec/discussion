@@ -692,7 +692,7 @@ class GroupMemberDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $group = $groupDAO->getGroupByID($row["id_group"]);
+        $group = $this->groupDAO->getGroupByID($row["id_group"]);
         $gmArr = array();
         $gmArr[] = new GroupMember(
             $group,
@@ -700,8 +700,7 @@ class GroupMemberDAO {
             $row["accept_status"]
         );
         while ($row = $this->db->next_row()) {
-            $group = $groupDAO->getGroupByID($row["id_group"]);
-            $gmArr = array();
+            $group = $this->groupDAO->getGroupByID($row["id_group"]);
             $gmArr[] = new GroupMember(
                 $group,
                 $user,
@@ -746,10 +745,12 @@ class GroupMember {
 
 class RecordDAO {
     private $db;
+    private $userDAO;
     
     public function __construct() {
         $this->db = new database();
         $this->db->connect();
+        $this->userDAO = new UserDAO();
     }
     public function __destruct() {
         $this->db->disconnect();
@@ -781,6 +782,44 @@ class RecordDAO {
         $sql = "delete from t_record where id_group = ".$this->db->escape_str($group->getGroupID());
         $this->db->send_sql($sql);
         return true;
+    }
+    public function getRecordsByGroup($group) {
+        if (gettype($group) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $groupID = $group->getGroupID();
+        $sql = "select id_record, id_group, id_user, message_type, content, time, display_status ".
+            "from t_record ".
+            "where id_group = ".$this->db->escape_str($groupID);
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $arr = array();
+        $user = $this->userDAO->getUserByID($row["id_user"]);
+        $arr[] = new Record(
+            $group,
+            $user,
+            $row["message_type"],
+            $row["content"],
+            $row["display_status"],
+            $row["time"],
+            $row["id_record"]
+        );
+        while ($row = $this->db->next_row()) {
+            $user = $this->userDAO->getUserByID($row["id_user"]);
+            $arr[] = new Record(
+                $group,
+                $user,
+                $row["message_type"],
+                $row["content"],
+                $row["display_status"],
+                $row["time"],
+                $row["id_record"]
+            );
+        }
+        return $arr;
     }
 }
 class Record {
