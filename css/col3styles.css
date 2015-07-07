@@ -92,3 +92,7 @@
 .navbar {
     border-radius: 0;
 }
+
+.comment-padding {
+    padding: .5em;
+}

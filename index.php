@@ -21,6 +21,7 @@ function displayIndex($userID) {
                        "link" => "index/link.html",
                        "image" => "index/image.html",
                        "invitation" => "index/invitation.html",
+                       "group_option" => "index/group_option.html",
                        "body" => "index/body.html",
                        "web_nav" => "web_nav.html",
                        "web_footer" => "web_footer.html"));
@@ -28,6 +29,19 @@ function displayIndex($userID) {
     
     $userDAO = new UserDAO();
     $user = $userDAO->getUserByID($userID);
+    
+    //initial owner group
+    $groupDAO = new GroupDAO();
+    $groups = $groupDAO->getGroupsByOwner($user);
+    if ($groups === null) {
+        $tpl->assign("INDEX_GROUP_OPTION", "");
+    } else {
+        foreach ($groups as $ownerGroup) {
+            $tpl->assign("INDEX_GROUP_OPTIONID", $ownerGroup->getGroupID());
+            $tpl->assign("INDEX_GROUP_OPTIONNAME", $ownerGroup->getGroupName());
+            $tpl->parse("INDEX_GROUP_OPTION", ".group_option");
+        }
+    }
     
     
     //initial list item

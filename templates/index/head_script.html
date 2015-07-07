@@ -2,6 +2,10 @@
 function createGroup(event) {
     $("#groupModal").modal("show");
 }
+    
+function addtoGroup(event) {
+    $("#addtogroupModal").modal("show");
+}
 
 function openDepartment(event) {
     event.preventDefault();
@@ -55,6 +59,7 @@ function verifyChecked() {
 function closeAlert(event) {
     event.preventDefault();
     $("#newgrouperror").addClass("hide");
+    $("#addtogrouperror").addClass("hide");
 }
 
 function closeCommentAlert(event) {
@@ -84,6 +89,30 @@ function submitNewGroup(event) {
            "json"
     );
 }
+    
+    
+function submitAddToGroup(event) {
+    event.preventDefault();
+    var groupid = $(this).find("select").val();
+    
+    $.post("ajax_change_group_member.php",
+          { "groupid" : groupid,
+            "adduserid" : checkedUser},
+           function(data) {
+               if (data.hasOwnProperty("url")) {
+                   window.location.href = data.url;
+               }
+               if (data.success) {
+                   window.location.href = "index.php";
+               } else {
+                   $("#addtogrouperror").html(addtoErrOriginHtml + " " + data.message)
+                              .removeClass("hide");
+                   $("#addtogroupalert").click(closeAlert);
+               }
+           },
+           "json"
+    );
+}    
     
 function switchTab(event) {
     event.preventDefault();
@@ -187,19 +216,29 @@ $(document).ready(function() {
     
     
     $("#createGroup").click(createGroup);
+    $("#addtoGroup").click(addtoGroup);
+    
+    
     $("#departuserform div a").click(openDepartment);
     $("#departuserform input[type=\"checkbox\"]").change(changeCheckbox);
     $("#newgroupalert").click(closeAlert);
+    $("#addtogroupalert").click(closeAlert);
     $("#newgroupform").submit(submitNewGroup);
+    $("#addtogroupform").submit(submitAddToGroup);
+    
+    
     $("#commenttab").children().click(switchTab);
     $("#commenttext").submit(submitTextPost);
     $("#commentlink").submit(submitLinkPost);
     $("#commentfile").submit(submitFilePost);
     $("#commentalert").click(closeCommentAlert);
     
+    
+    
     parentStack = [];
     checkedUser = [];
     errorOriginHtml = $("#newgrouperror").html();
+    addtoErrOriginHtml = $("#addtogrouperror").html();
     commentErrorHtml = $("#commenterror").html();
 });
 </script>
