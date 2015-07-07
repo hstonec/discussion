@@ -52,7 +52,6 @@ INSERT INTO `t_department` (`id_department`, `id_parent`, `department_name`) VAL
 
 
 INSERT INTO `t_user` (`id_user`, `id_role`, `id_department`, `username`, `password`, `first_name`, `last_name`, `gender`, `photo_url`) VALUES
-(1, 1, 1, 'rootroot1', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'Anakin', 'Skywalker', 1, 'photo/default.png'),
 (2, 1, 1, 'rootroot2', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'rootfirstname', 'rootlastname', 2, 'photo/default.png'),
 (3, 2, 2, 'stevens', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'stevensfn', 'stevensln', 1, 'photo/default.png'),
 (4, 2, 3, 'newyork', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'newyorkfn', 'newyorkln', 2, 'photo/default.png'),
@@ -118,39 +117,29 @@ INSERT INTO `t_user` (`id_user`, `id_role`, `id_department`, `username`, `passwo
 (65, 3, 3, 'NGROUP', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'A', 'GROUP', 2, 'photo/default.png');
 
 
+--
+-- Dumping data for table `t_group`
+--
+
 INSERT INTO `t_group` (`id_group`, `id_owner`, `group_name`, `activate_status`) VALUES
-(1, 55, 'TEST', 1),
-(2, 57, 'HAHA', 2),
-(3, 55, 'TEST00', 2),
-(4, 57, 'HAHA00', 1),
-(5, 59, 'TALK', 1),
-(6, 51, 'DISCUSSION', 2),
-(7, 55, 'CS546', 1),
-(8, 57, 'CAMPUS_LIFE', 1),
-(9, 1, 'SPIDERMAN', 1),
-(10, 1, 'SUPERMAN', 1);
+(1, 1, 'Group Test 1', 1);
+
+--
+-- Dumping data for table `t_group_member`
+--
 
 INSERT INTO `t_group_member` (`id_group`, `id_user`, `accept_status`) VALUES
 (1, 1, 1),
 (1, 2, 1),
-(1, 3, 2),
-(1, 4, 1),
-(1, 5, 1),
-(1, 6, 3),
-(1, 14, 1),
-(2, 2, 1),
-(3, 57, 1),
-(4, 63, 1),
-(5, 51, 1),
-(6, 55, 1),
-(7, 53, 1),
-(8, 59, 1),
-(9, 5, 2),
-(10, 5, 2);
+(1, 49, 2),
+(1, 50, 2);
 
+--
+-- Dumping data for table `t_record`
+--
 
 INSERT INTO `t_record` (`id_record`, `id_group`, `id_user`, `message_type`, `content`, `time`, `display_status`) VALUES
-(1, 1, 51, 1, 'bahah!', '2015-07-05 23:11:21', 1),
-(2, 1, 51, 1, 'bahah!', '2015-07-05 23:12:52', 1),
-(3, 1, 3, 1, 'www.w3c.org!', '2015-07-05 23:16:35', 1);
+(1, 1, 1, 1, 'Hello!', '2015-07-07 21:55:08', 1),
+(2, 1, 1, 1, 'Hi!', '2015-07-07 21:55:13', 1),
+(3, 1, 2, 1, 'Thanks!', '2015-07-07 21:55:37', 1);
 

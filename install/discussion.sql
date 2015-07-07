@@ -121,6 +121,8 @@ CREATE TABLE IF NOT EXISTS `t_user` (
   `photo_url` varchar(300) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+INSERT INTO `t_user` (`id_user`, `id_role`, `id_department`, `username`, `password`, `first_name`, `last_name`, `gender`, `photo_url`) VALUES
+(1, 1, 1, 'rootroot', '$2y$10$W7mLvWNVtkM3HCf2xQIrq.WB.piLKoMzPKK0Yj02YzdNJYFWcABvW', 'Anakin', 'Skywalker', 1, 'photo/default.png');
 --
 -- Indexes for dumped tables
 --

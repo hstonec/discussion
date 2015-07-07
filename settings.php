@@ -277,7 +277,7 @@ function displayRecord($user, $tpl) {
             $tpl->assign("SETTINGS_RECORD_RECORDID", $record->getRecordID());
             $tpl->parse("SETTINGS_RECORD_TD", "record_td");
             $tpl->assign("SETTINGS_RECORD_TR_RECORDID", $record->getRecordID());
-            $tpl->assign("SETTINGS_RECORD_TR_CONTENT", $record->getContent());
+            $tpl->assign("SETTINGS_RECORD_TR_CONTENT", htmlentities($record->getContent()));
 			$tpl->assign("SETTINGS_RECORD_TR_TIME", $record->getTime());
             $tpl->parse("SETTINGS_RECORD_TR", ".record_tr");
         }
