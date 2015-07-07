@@ -44,11 +44,15 @@ function displayIndex($userID) {
     }
     
     
+    
     //initial list item
     $gmDAO = new GroupMemberDAO();
     $gms = $gmDAO->getGroupMembersByUser($user);
     if ($gms !== null) {
         $i = 1;
+        
+        $hasoneaccept = false;
+        
         foreach($gms as $gm) {
             if ($gm->getAcceptStatus() == "2")
                 continue;
@@ -62,8 +66,13 @@ function displayIndex($userID) {
             $tpl->assign("INDEX_LIST_ITEM_SEQ", $i);
             $tpl->assign("INDEX_LIST_ITEM_GROUPNAME", $group->getGroupName());
             $tpl->parse("INDEX_LIST_ITEM_LI", ".list_item");
-            
+            $hasoneaccept = true;
             $i++;
+        }
+        
+        if ($hasoneaccept == false) {
+            $tpl->assign("INDEX_LIST_ITEM_LI", "");
+            $tpl->assign("INDEX_GROUP_HEADER", "");
         }
     } else {
         $tpl->assign("INDEX_LIST_ITEM_LI", "");
@@ -75,6 +84,8 @@ function displayIndex($userID) {
     $recordDAO = new RecordDAO();
     
     if ($gms !== null) {
+        
+        $hasGMSflag = false;
         $i = 1;
         foreach($gms as $gm) {
             if ($gm->getAcceptStatus() == "2")
@@ -124,13 +135,22 @@ function displayIndex($userID) {
                     $tpl->parse("INDEX_GROUP_COMMENT", ".comment");
                     $hasOneFlag = true;
                 }
+                
+                if ($hasOneFlag == false)
+                    $tpl->assign("INDEX_GROUP_COMMENT", "");
             }
             
-            if ($hasOneFlag == false)
-                $tpl->assign("INDEX_GROUP_COMMENT", "");
+            
             $tpl->parse("INDEX_GROUP", ".group");
+            $hasGMSflag = true;
             $i++;
         }
+        
+        if ($hasGMSflag == false) {
+            $tpl->assign("INDEX_GROUP_COMMENT", "");
+            $tpl->parse("INDEX_GROUP", "group");
+        }
+        
     } else {
         $tpl->assign("INDEX_GROUP_COMMENT", "");
         $tpl->parse("INDEX_GROUP", "group");
@@ -174,6 +194,8 @@ function displayIndex($userID) {
     
     if ($flag === false)
         $tpl->assign("INDEX_INVITATION", "");
+    
+    
     
     $tpl->assign("TITLE", "Home");
     $tpl->parse("WEB_HEADER", "web_header");
