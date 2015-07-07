@@ -655,11 +655,13 @@ class Group {
 class GroupMemberDAO {
     private $db;
     private $groupDAO;
+    private $userDAO;
     
     public function __construct() {
         $this->db = new database();
         $this->db->connect();
         $this->groupDAO = new GroupDAO();
+        $this->userDAO = new UserDAO();
     }
     public function __destruct() {
         $this->db->disconnect();
@@ -722,6 +724,36 @@ class GroupMemberDAO {
         );
         while ($row = $this->db->next_row()) {
             $group = $this->groupDAO->getGroupByID($row["id_group"]);
+            $gmArr[] = new GroupMember(
+                $group,
+                $user,
+                $row["accept_status"]
+            );
+        }
+        return $gmArr;
+    }
+    public function getGroupMembersByGroup($group) {
+        if (gettype($group) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $groupID = $group->getGroupID();
+        $sql = "select id_group, id_user, accept_status ".
+               "from t_group_member ".
+               "where id_group = ".$this->db->escape_str($groupID);
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $user = $this->userDAO->getUserByID($row["id_user"]);
+        $gmArr = array();
+        $gmArr[] = new GroupMember(
+            $group,
+            $user,
+            $row["accept_status"]
+        );
+        while ($row = $this->db->next_row()) {
+            $user = $this->userDAO->getUserByID($row["id_user"]);
             $gmArr[] = new GroupMember(
                 $group,
                 $user,

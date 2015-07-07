@@ -58,6 +58,12 @@
                                 <button id = "addtoGroup" type="button" class="btn btn-default">Add to Group</button>
                             </div>
                         </div>
+                        
+                        <div class="form-group"> 
+                            <div class="col-sm-10">
+                                <button id = "editGroup" type="button" class="btn btn-default">Edit Group Member</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -168,6 +174,49 @@
                     <select class="form-control">
 {INDEX_GROUP_OPTION}
                     </select>
+                  </div>
+                  <div class="form-group"> 
+                    <div class="col-sm-offset-3 col-sm-10">
+                      <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+
+
+
+<div id="editgroupModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Group Member</h4>
+              </div>
+                
+              <div class="modal-body">
+                  <div id="editgrouperror" class="alert alert-danger fade in hide">
+                    <a href="#" class="close" id="editgroupalert">&times;</a>
+                    <strong>Error!</strong>
+                </div>
+                  
+                <form id="editgroupform" class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label class="control-label col-sm-3" for="groupName">Group Name:</label>
+                    <select class="form-control">
+                        <option value="NONE"></option>
+{INDEX_GROUP_OPTION}
+                    </select>
+                  </div>
+                  <div class="form-group" id="groupmemberchecklist" >
+                      <label class="control-label col-sm-3" >Group Members:</label>
                   </div>
                   <div class="form-group"> 
                     <div class="col-sm-offset-3 col-sm-10">

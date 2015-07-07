@@ -6,6 +6,10 @@ function createGroup(event) {
 function addtoGroup(event) {
     $("#addtogroupModal").modal("show");
 }
+    
+function editGroup(event) {
+    $("#editgroupModal").modal("show");
+}
 
 function openDepartment(event) {
     event.preventDefault();
@@ -60,6 +64,8 @@ function closeAlert(event) {
     event.preventDefault();
     $("#newgrouperror").addClass("hide");
     $("#addtogrouperror").addClass("hide");
+    $("#editgrouperror").addClass("hide");
+    
 }
 
 function closeCommentAlert(event) {
@@ -113,6 +119,49 @@ function submitAddToGroup(event) {
            "json"
     );
 }    
+    
+function submitEditGroup(event) {
+    event.preventDefault();
+    var groupid = $(this).find("select").val();
+    var checkbox = document.getElementsByName("groupmembercheckbox");
+    var checkedArr = [];
+    for (var k in checkbox) {
+        if (checkbox[k].checked == true)
+            checkedArr.push(checkbox[k].value);
+    }
+    
+    $.post("ajax_edit_group_member.php",
+          { "groupid" : groupid,
+            "checkedbox" : checkedArr},
+           function(data) {
+               if (data.hasOwnProperty("url")) {
+                   window.location.href = data.url;
+               }
+               if (data.success) {
+                   window.location.href = "index.php";
+               } else {
+                   $("#editgrouperror").html(addtoErrOriginHtml + " " + data.message)
+                              .removeClass("hide");
+                   $("#editgroupalert").click(closeAlert);
+               }
+           },
+           "json"
+    );
+        
+}
+    
+function getGroupMember(event) {
+    var groupid = $(this).val();
+    
+    $.post("ajax_get_group_member.php",
+          { "groupid" : groupid},
+           function(data) {
+                $("#groupmemberchecklist").html(oriGroupMemberHtml + data);
+           },
+           "text"
+    );
+}
+    
     
 function switchTab(event) {
     event.preventDefault();
@@ -217,14 +266,24 @@ $(document).ready(function() {
     
     $("#createGroup").click(createGroup);
     $("#addtoGroup").click(addtoGroup);
+    $("#editGroup").click(editGroup);
+    
     
     
     $("#departuserform div a").click(openDepartment);
     $("#departuserform input[type=\"checkbox\"]").change(changeCheckbox);
+    
+    
     $("#newgroupalert").click(closeAlert);
     $("#addtogroupalert").click(closeAlert);
+    $("#editgroupalert").click(closeAlert);
+    
     $("#newgroupform").submit(submitNewGroup);
     $("#addtogroupform").submit(submitAddToGroup);
+    $("#editgroupform").submit(submitEditGroup);
+    
+    $("#editgroupform select").change(getGroupMember);
+    oriGroupMemberHtml = $("#groupmemberchecklist").html();
     
     
     $("#commenttab").children().click(switchTab);
@@ -239,6 +298,7 @@ $(document).ready(function() {
     checkedUser = [];
     errorOriginHtml = $("#newgrouperror").html();
     addtoErrOriginHtml = $("#addtogrouperror").html();
+    editErrOriginHtml = $("#editgrouperror").html();
     commentErrorHtml = $("#commenterror").html();
 });
 </script>
