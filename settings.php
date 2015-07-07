@@ -33,6 +33,9 @@ function displaySettings() {
     
     desplayDepartment($user, $tpl);
     
+	//display record
+	displayRecord($user, $tpl);
+	
     $tpl->assign("TITLE", "My Profile");
     $tpl->parse("WEB_HEADER", "web_header");
     $tpl->parse("HEAD_SCRIPT", "head_script");
@@ -226,4 +229,44 @@ function desplayDepartment($user, $tpl) {
     $tpl->parse("SETTINGS_DEPARTMENT", "department");
 }
 
+
+function displayRecord($user, $tpl) {
+    $tpl->define(array("record" => "settings/record.html",
+                       "record_tr" => "settings/record_tr.html",
+                       "record_td" => "settings/record_td.html",
+                       "record_delete" => "settings/record_delete.html"));
+    
+    $roleID = $user->getRole()->getRoleID();
+    $recordDAO = new RecordDAO();
+    if ($roleID === "1" || $roleID === "2") {
+        $records = $recordDAO->getAllRecords(); //do not have this function
+        $tpl->parse("SETTINGS_RECORD_TD_DELETE", "record_delete");
+    } elseif ($roleID === "3") {
+        $records = $recordDAO->getRecordsByUser($user);  // Do not have this function
+        $tpl->assign("SETTINGS_RECORD_TD_DELETE", "");
+    }
+    if ($records === null) {
+        $tpl->assign("SETTINGS_RECORD_TR", "");
+    } else {
+        foreach ($records as $record) {
+            $currentRecordStatus = $record->getDisplayStatus(); 
+            if ($currentRecordStatus =="1") {
+                $tpl->assign("SETTINGS_RECORD_TD_CURR_NAME", "Activated");
+                $tpl->assign("SETTINGS_RECORD_TD_CHAN_STATUS", "2");
+                $tpl->assign("SETTINGS_RECORD_TD_CHAN_NAME", "Block");
+            } elseif ($currentRecordStatus == "2") {
+                $tpl->assign("SETTINGS_RECORD_TD_CURR_NAME", "Blocked");
+                $tpl->assign("SETTINGS_RECORD_TD_CHAN_STATUS", "1");
+                $tpl->assign("SETTINGS_RECORD_TD_CHAN_NAME", "Activate");
+            }
+            $tpl->assign("SETTINGS_RECORD_RECORDID", $record->getRecordID());
+            $tpl->parse("SETTINGS_RECORD_TD", "record_td");
+            $tpl->assign("SETTINGS_RECORD_TR_RECORDID", $record->getRecordID());
+            $tpl->assign("SETTINGS_RECORD_TR_CONTENT", $record->getContent());
+			$tpl->assign("SETTINGS_RECORD_TR_TIME", $record->getTime());
+            $tpl->parse("SETTINGS_RECORD_TR", ".record_tr");
+        }
+    }
+    $tpl->parse("SETTINGS_RECORD", "record");
+}
 ?>

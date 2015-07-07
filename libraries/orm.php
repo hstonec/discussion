@@ -935,6 +935,87 @@ class RecordDAO {
         $this->db->send_sql($sql);
         return true;
     }
+	public function getRecordsByUser($user) {
+        if (gettype($user) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $userID = $user->getUserID();
+        $sql = "select id_record, id_group, id_user, message_type, content, time, display_status ".
+            "from t_record ".
+            "where id_user = ".$this->db->escape_str($userID);
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $arr = array();
+        $group = $this->groupDAO->getGroupByID($row["id_group"]);
+        $arr[] = new Record(
+            $group,
+            $user,
+            $row["message_type"],
+            $row["content"],
+            $row["display_status"],
+            $row["time"],
+            $row["id_record"]
+        );
+        while ($row = $this->db->next_row()) {
+            $group = $this->groupDAO->getGroupByID($row["id_group"]);
+            $arr[] = new Record(
+                $group,
+                $user,
+                $row["message_type"],
+                $row["content"],
+                $row["display_status"],
+                $row["time"],
+                $row["id_record"]
+            );
+        }
+        return $arr;
+    }
+	public function deleteRecord($record) {
+        if (gettype($record) != "object") {
+            echo "ERROR: Wrong argument type!";
+            exit;
+        }
+        $sql = "delete from t_record where id_record = ".$this->db->escape_str($record->getRecordID());
+        $this->db->send_sql($sql);
+        return true;
+    }
+	public function getAllRecords() {
+        $sql = "select id_record, id_group, id_user, message_type, content, time, display_status ".
+               "from t_record";
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+		$group = $this->groupDAO->getGroupByID($row["id_group"]);
+        $user = $this->userDAO->getUserByID($row["id_user"]);
+        $recordsArr = array();
+        $recordsArr[] = new Record(
+			$group,
+            $user,
+            $row["message_type"],
+			$row["content"],
+			$row["display_status"],
+			$row["time"],
+            $row["id_record"]
+        );
+        while ($row = $this->db->next_row()) {
+			$group = $this->groupDAO->getGroupByID($row["id_group"]);
+            $user = $this->userDAO->getUserByID($row["id_user"]);
+           $recordsArr[] = new Record(
+			$group,
+            $user,
+            $row["message_type"],
+			$row["content"],
+            $row["display_status"],
+			$row["time"],
+            $row["id_record"]
+        );
+        }
+        return $recordsArr;
+    }
 }
 class Record {
     private $recordID;

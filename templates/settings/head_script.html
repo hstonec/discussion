@@ -236,6 +236,51 @@ function editDepart(event) {
 		"json"
 	);
 }
+
+function changerecord(event) {
+    event.preventDefault();
+    var newrecordstatus = $(this).attr("value");
+    var recordid = $(this).parent().parent().attr("value"); 
+    clickedRecord = $(this);
+    
+    $.post("ajax_change_record_status.php", 
+		{"recordid": recordid,
+		 "newrecordstatus": newrecordstatus},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+                var oldValue = clickedRecord.attr("value");
+                var buttonEle = clickedRecord.parent().parent().prev();
+                if (oldValue == "1") {
+                    clickedRecord.attr("value", "2");
+                    clickedRecord.text("Blocked");
+                    buttonEle.html("Activated" + " <span class=\"caret\"></span>");
+                } else if (oldValue == "2") {
+                    clickedRecord.attr("value", "1");
+                    clickedRecord.text("Activated");
+                    buttonEle.html("Blocked" + " <span class=\"caret\"></span>");
+                } else if (oldValue == "3") {
+                    buttonEle.parent().parent().parent().remove();
+                }
+				$("#success").html(successOriginHtml + " " + data.message)
+				             .removeClass("hide");
+				$("#alertsuccess").click(function(){
+					$("#success").addClass("hide");
+				});
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);
+    
+}
 $(document).ready(function() {
    errorOriginHtml = $("#error").html();
    successOriginHtml = $("#success").html();
@@ -262,6 +307,6 @@ $(document).ready(function() {
     $("#departmentcreate").submit(createDepart);
     $("#departmentedit").submit(editDepart);
     $("#userroletable li a").click(chanUserRole);
-    
+    $("#recordtable li a").click(changerecord);
 });
 </script>
