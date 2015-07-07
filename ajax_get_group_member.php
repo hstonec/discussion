@@ -21,14 +21,20 @@ if (isset($_POST["groupid"])) {
     $gmDAO = new GroupMemberDAO();
     $gms = $gmDAO->getGroupMembersByGroup($group);
     
+    
+    $flag = false;
     foreach ($gms as $gm) {
         if ($gm->getUser()->getUserID() === $userID)
             continue;
         $tpl->assign("INDEX_GROUP_CHECKED_USERID", $gm->getUser()->getUserID());
         $tpl->assign("INDEX_GROUP_CHECKED_USERNAME", $gm->getUser()->getFirstName()." ".$gm->getUser()->getLastName());
         $tpl->parse("MAIN", ".group_checked_member");
+        $flag = true;
     }
-    $tpl->FastPrint();
+    
+    if ($flag === true)
+        $tpl->FastPrint();
+    
 }
 
 
