@@ -90,6 +90,7 @@ function displayIndex($userID) {
             if ($records === null) {
                 $tpl->assign("INDEX_GROUP_COMMENT", "");
             } else {
+                $hasOneFlag = false;
                 $tpl->clear("INDEX_GROUP_COMMENT");
                 foreach($records as $rec) {
                     if ($rec->getDisplayStatus() === "2")
@@ -121,8 +122,12 @@ function displayIndex($userID) {
                     }
                     
                     $tpl->parse("INDEX_GROUP_COMMENT", ".comment");
+                    $hasOneFlag = true;
                 }
             }
+            
+            if ($hasOneFlag == false)
+                $tpl->assign("INDEX_GROUP_COMMENT", "");
             $tpl->parse("INDEX_GROUP", ".group");
             $i++;
         }
