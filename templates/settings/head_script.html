@@ -71,7 +71,7 @@ function changeprofile(event) {
     
     
     $.ajax({
-        url: 'ajax_change_profile.php?XDEBUG_SESSION_START=xdebug',
+        url: 'ajax_change_profile.php',
         type: 'post',
         success: function(data) {
             if (data.hasOwnProperty("url")) {
