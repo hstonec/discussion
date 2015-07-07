@@ -28,6 +28,8 @@ function displaySettings() {
     //display group
     displayGroup($user, $tpl);
     
+    //display user
+    displayUser($user, $tpl);
     
     desplayDepartment($user, $tpl);
     
@@ -118,6 +120,92 @@ function displayGroup($user, $tpl) {
         }
     }
     $tpl->parse("SETTINGS_GROUP", "group");
+}
+
+function displayUser($user, $tpl){
+    $tpl->define(array("user" => "settings/user.html",
+                       "user_tr" => "settings/user_tr.html",
+                       "user_role" => "settings/user_role.html",
+                       "user_root" => "settings/user_root.html"));
+    $roleID = $user->getRole()->getRoleID();
+    $userDAO = new UserDAO();
+     
+    if ($roleID === "1") {
+        $tpl->parse("SETTINGS_USER_TD_ROOT", "user_root");
+        $roleUsers1 = $userDAO->getUsersByRoleID("1");
+        changRole($tpl, $roleUsers1, "1");
+    
+        $roleUsers2 = $userDAO->getUsersByRoleID("2");
+        changRole($tpl, $roleUsers2, "2");
+        
+        $roleUsers3 = $userDAO->getUsersByRoleID("3");
+        changRole($tpl, $roleUsers3, "3");
+        
+        $roleUsers4 = $userDAO->getUsersByRoleID("4");
+        changRole($tpl, $roleUsers4, "4");
+    } elseif ($roleID === "2") {
+        $tpl->assign("SETTINGS_USER_TD_ROOT", "");
+        $roleUsers3 = $userDAO->getUsersByRoleID("3");
+        if ($roleUsers3 === null)
+            $tpl->assign("SETTINGS_USER_TR", "");
+        changRole($tpl, $roleUsers3, "3");
+        $roleUsers4 = $userDAO->getUsersByRoleID("4");
+        if ($roleUsers4 === null)
+            $tpl->assign("SETTINGS_USER_TR", "");
+        changRole($tpl, $roleUsers4, "4");
+        
+    }
+    $tpl->parse("SETTINGS_USER", "user");
+}
+function changRole($tpl, $roleUsers, $idRole){ 
+    //show users of role=1
+    if ($roleUsers !== null) {
+        foreach ($roleUsers as $r){
+            if ($idRole === "1"){
+                $tpl->assign("SETTINGS_USER_TD_CURR_ROLE_STATUS", "Root");
+                $tpl->assign("SETTING_USER_TD_USERID", $r->getUserID());
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS1","3");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME1","User");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS2","4");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME2","Forbidden");
+            }
+            elseif ($idRole === "2"){
+                $tpl->assign("SETTINGS_USER_TD_CURR_ROLE_STATUS", "Administrator");
+                $tpl->assign("SETTING_USER_TD_USERID", $r->getUserID());
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS1","3");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME1","User");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS2","4");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME2","Forbidden");
+            }
+            elseif ($idRole === "3") {
+                $tpl->assign("SETTINGS_USER_TD_CURR_ROLE_STATUS", "User");
+                $tpl->assign("SETTING_USER_TD_USERID", $r->getUserID());
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS1","3");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME1","User");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS2","4");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME2","Forbidden");
+            }
+            elseif ($idRole === "4") {
+                $tpl->assign("SETTINGS_USER_TD_CURR_ROLE_STATUS", "Forbidden");
+                $tpl->assign("SETTING_USER_TD_USERID", $r->getUserID());
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS1","3");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME1","User");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_STATUS2","4");
+                $tpl->assign("SETTINGS_USER_TD_CHAN_ROLE_NAME2","Forbidden");
+            }
+            $tpl->parse("SETTINGS_USER_TD_ROLE", "user_role");
+            $tpl->assign("SETTINGS_USER_TD_FIRSTNAME", $r->getFirstName());
+            $tpl->assign("SETTINGS_USER_TD_LASTNAME", $r->getLastName());
+            $gender = $r->getGender();
+            if ($gender === "1")
+                $gender = "Male";
+            elseif ($gender === "2")
+                $gender = "Female";
+            $tpl->assign("SETTINGS_USER_TD_GENDER", $gender);
+            $tpl->parse("SETTINGS_USER_TR", ".user_tr");
+        }
+      }
+    
 }
 
 function desplayDepartment($user, $tpl) {

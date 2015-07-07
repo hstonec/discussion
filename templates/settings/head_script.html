@@ -145,8 +145,45 @@ function changegroup(event) {
 	);
     
 }
-  
+
+function chanUserRole(event) {
+    event.preventDefault();
+    var newrole = $(this).attr("value");
+    var userid = $(this).parent().parent().attr("value");
+    clickedRole = $(this);
     
+    
+    $.post("ajax_change_role.php", 
+		{"userid": userid,
+		 "newrole": newrole},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+               // var oldValue = clickedRole.attr("value");
+                var buttonEle = clickedRole.parent().parent().prev();
+                var buttonTxt = clickedRole.text();
+                buttonEle.html(buttonTxt + " <span class=\"caret\"></span>");
+                
+                
+				$("#success").html(successOriginHtml + " " + data.message)
+				             .removeClass("hide");
+				$("#alertsuccess").click(function(){
+					$("#success").addClass("hide");
+				});
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);   
+}
+
 function createDepart(event) {
     event.preventDefault();
     var parentid = $(this).find("select").val();
@@ -224,6 +261,7 @@ $(document).ready(function() {
 	
     $("#departmentcreate").submit(createDepart);
     $("#departmentedit").submit(editDepart);
+    $("#userroletable li a").click(chanUserRole);
     
 });
 </script>
