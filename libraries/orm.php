@@ -90,9 +90,8 @@ class DepartmentDAO {
             echo "ERROR: Wrong argument type!"; 
             exit; 
         }
-        $sql = "insert into t_department (id_department, id_parent, department_name) ".
-               "values (".$this->db->escape_str($department->getDepartmentID()).", ".
-                          $this->db->escape_str($department->getParentID()).", ".
+        $sql = "insert into t_department (id_parent, department_name) ".
+               "values (".$this->db->escape_str($department->getParentID()).", ".
                         "'".$this->db->escape_str($department->getDepartmentName())."')";
         $this->db->send_sql($sql);
         $department->setDepartmentID($this->db->insert_id());
@@ -104,8 +103,9 @@ class DepartmentDAO {
             exit; 
         }
         $sql = "update t_department ".
-               "set id_parent = ".$this->db->escape_str($department->getParentID()).
-                   "department_name = '".$this->db->escape_str($department->getDepartmentName())."'";
+               "set id_parent = ".$this->db->escape_str($department->getParentID()).", ".
+                   "department_name = '".$this->db->escape_str($department->getDepartmentName())."' ".
+               "where id_department = ".$this->db->escape_str($department->getDepartmentID());
         $this->db->send_sql($sql);
         return true;
     }
@@ -132,6 +132,27 @@ class DepartmentDAO {
         $sql = "select id_department, id_parent, department_name ".
                "from t_department ".
                "where id_parent = ".$this->db->escape_str($parentID);
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $childArray = array();
+        $childArray[] = new Department(
+            $row["id_parent"],
+            $row["department_name"],
+            $row["id_department"]);
+        while ($row = $this->db->next_row()) {
+            $childArray[] = new Department(
+                $row["id_parent"],
+                $row["department_name"],
+                $row["id_department"]
+            );
+        }
+        return $childArray;
+    }
+    public function getAllDepartments() {
+        $sql = "select id_department, id_parent, department_name ".
+               "from t_department";
         $this->db->send_sql($sql);
         $row = $this->db->next_row();
         if ($row === null)

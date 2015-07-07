@@ -14,6 +14,8 @@ function displaySettings() {
                        "web_header" => "web_header.html",
                        "head_script" => "settings/head_script.html",
 					   "profile" => "settings/profile.html",
+                       "department" => "settings/department.html",
+                       "department_option" => "settings/department_option.html",
                        "body" => "settings/body.html",
                        "web_nav" => "web_nav.html",
                        "web_footer" => "web_footer.html"));
@@ -25,6 +27,9 @@ function displaySettings() {
 	
     //display group
     displayGroup($user, $tpl);
+    
+    
+    desplayDepartment($user, $tpl);
     
     $tpl->assign("TITLE", "My Profile");
     $tpl->parse("WEB_HEADER", "web_header");
@@ -49,6 +54,30 @@ function displayProfile($user, $tpl) {
 		$tpl->assign("SETTINGS_PROFILE_MALE", "");
 		$tpl->assign("SETTINGS_PROFILE_FEMALE", "checked");
 	}
+    
+    $departDAO = new DepartmentDAO();
+    $departs = $departDAO->getAllDepartments();
+    if ($departs === null)
+        $tpl->assign("SETTINGS_DEPARTMENT_OPTION_PROFILE", "");
+    else{
+        foreach ($departs as $depart) {
+            if ($user->getDepartment()->getDepartmentID() === $depart->getDepartmentID()) {
+                if ($depart->getDepartmentID() === "1")
+                    $tpl->assign("SETTINGS_DEPARTMENT_ROOT", "selected");
+                else {
+                    $tpl->assign("SETTINGS_DEPARTMENT_ROOT", "");
+                    $tpl->assign("SETTINGS_DEPARTMENT_SELECTED", "selected");
+                }
+            } else {
+                $tpl->assign("SETTINGS_DEPARTMENT_SELECTED", "");
+            }
+            if ($depart->getDepartmentID() === "1")
+                continue;
+            $tpl->assign("SETTINGS_DEPARTMENT_DEPARTID", $depart->getDepartmentID());
+            $tpl->assign("SETTINGS_DEPARTMENT_DEPARTNAME", $depart->getDepartmentName());
+            $tpl->parse("SETTINGS_DEPARTMENT_OPTION_PROFILE", ".department_option");
+        }
+    }
 		
 }
 
@@ -91,5 +120,22 @@ function displayGroup($user, $tpl) {
     $tpl->parse("SETTINGS_GROUP", "group");
 }
 
+function desplayDepartment($user, $tpl) {
+
+    $departDAO = new DepartmentDAO();
+    $departs = $departDAO->getAllDepartments();
+    if ($departs === null)
+        $tpl->assign("SETTINGS_DEPARTMENT_OPTION", "");
+    else{
+        foreach ($departs as $depart) {
+            if ($depart->getDepartmentID() === "1")
+                continue;
+            $tpl->assign("SETTINGS_DEPARTMENT_DEPARTID", $depart->getDepartmentID());
+            $tpl->assign("SETTINGS_DEPARTMENT_DEPARTNAME", $depart->getDepartmentName());
+            $tpl->parse("SETTINGS_DEPARTMENT_OPTION", ".department_option");
+        }
+    }
+    $tpl->parse("SETTINGS_DEPARTMENT", "department");
+}
 
 ?>

@@ -19,12 +19,19 @@
     <label class="radio-inline"><input type="radio" id="sexf" name="sex" value="2" {SETTINGS_PROFILE_FEMALE}>Female</label>
   </div>
   
+<div class="form-group">
+    <label>Department:</label>
+    <select class="form-control">
+        <option value="1" {SETTINGS_DEPARTMENT_ROOT}>Default</option>
+{SETTINGS_DEPARTMENT_OPTION_PROFILE}
+    </select>
+</div>
   
   <div class="form-group">
 	<label for="profile_photo">Upload Photo:</label>
-	<input type="file" class="form-control" id="photo" placeholder="Enter your last name">
+	<input type="file" class="form-control" id="uploadphoto">
   </div>
-	
+	        
   <hr>
   <div class="form-group"> 
 	<button type="submit" class="btn btn-default">Submit</button>

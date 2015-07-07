@@ -1,4 +1,17 @@
 <script>  
+
+function switchTab(event) {
+    event.preventDefault();
+    var activeID = $(this).attr("value");
+    $(this).siblings().removeClass("active");
+    $(this).addClass("active");
+    
+    $("#departmentcreate").addClass("hide");
+    $("#departmentedit").addClass("hide");
+    
+    $("#" + activeID).removeClass("hide");
+}    
+
 function changepw(event) {
 	event.preventDefault();
 	
@@ -35,6 +48,11 @@ function changepw(event) {
 function changeprofile(event) {
 	event.preventDefault();
 	
+    
+    var formData = new FormData();
+    formData.append("uploadphoto", document.getElementById("uploadphoto").files[0]);
+    
+    var departmentid = $(this).find("select").val();
 	var profile_firstname = $("#profile_firstname");
 	var profile_lastname = $("#profile_lastname");
 	var sexm = $("#sexm");
@@ -45,30 +63,41 @@ function changeprofile(event) {
 	else
 		sex = sexf;
 	
-	$.post("ajax_change_profile.php", 
-		{"profile_firstname": profile_firstname.val(),
-		 "profile_lastname": profile_lastname.val(),
-		 "sex": sex.val()},
-		function(data) {
-			if(data.hasOwnProperty("url")) {
-				window.location.href = data.url;
-			}
-			if(data.success) {
-				$("#success").html(successOriginHtml + " " + data.message)
+    
+    formData.append("profile_firstname", profile_firstname.val());
+    formData.append("profile_lastname", profile_lastname.val());
+    formData.append("sex", sex.val());
+    formData.append("departmentid", departmentid);
+    
+    
+    $.ajax({
+        url: 'ajax_change_profile.php?XDEBUG_SESSION_START=xdebug',
+        type: 'post',
+        success: function(data) {
+            if (data.hasOwnProperty("url")) {
+               window.location.href = data.url;
+           }
+           if (data.success) {
+               $("#success").html(successOriginHtml + " " + data.message)
 				             .removeClass("hide");
 				$("#alertsuccess").click(function(){
 					$("#success").addClass("hide");
 				});
-			}else{
-				$("#error").html(errorOriginHtml + " " + data.message)
+           } else {
+               $("#error").html(errorOriginHtml + " " + data.message)
 							.removeClass("hide");
 				$("#alerterror").click(function(){
 					$("#error").addClass("hide");
 				});
-			}
-		},
-		"json"
-	);	
+           }
+        },
+        data: formData,
+        dataType: "json",
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+    
 }
     
 function changegroup(event) {
@@ -117,6 +146,59 @@ function changegroup(event) {
     
 }
   
+    
+function createDepart(event) {
+    event.preventDefault();
+    var parentid = $(this).find("select").val();
+    var departname = $(this).find("input").val();
+    
+    $.post("ajax_change_department.php", 
+		{"parentid": parentid,
+		 "departmentname": departname},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+				window.location.href = "settings.php";
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);	
+}
+    
+function editDepart(event) {
+    event.preventDefault();
+    
+    var departid = $(this).find("select").val();
+    var departname = $(this).find("input").val();
+    
+    $.post("ajax_change_department.php", 
+		{"departmentid": departid,
+		 "departmentname": departname},
+		function(data) {
+			if(data.hasOwnProperty("url")) {
+				window.location.href = data.url;
+			}
+			if(data.success) {
+				window.location.href = "settings.php";
+			}else{
+				$("#error").html(errorOriginHtml + " " + data.message)
+							.removeClass("hide");
+				$("#alerterror").click(function(){
+					$("#error").addClass("hide");
+				});
+			}
+		},
+		"json"
+	);
+}
 $(document).ready(function() {
    errorOriginHtml = $("#error").html();
    successOriginHtml = $("#success").html();
@@ -137,8 +219,11 @@ $(document).ready(function() {
    
 	$("#changepwform").submit(changepw);
 	$("#profileform").submit(changeprofile);
-    
+    $("#divlistitem4 ul li").click(switchTab);
     $("#grouptable li a").click(changegroup);
 	
+    $("#departmentcreate").submit(createDepart);
+    $("#departmentedit").submit(editDepart);
+    
 });
 </script>
