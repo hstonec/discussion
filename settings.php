@@ -16,6 +16,7 @@ function displaySettings() {
 					   "profile" => "settings/profile.html",
                        "department" => "settings/department.html",
                        "department_option" => "settings/department_option.html",
+                       "authority" => "settings/authority.html",
                        "body" => "settings/body.html",
                        "web_nav" => "web_nav.html",
                        "web_footer" => "web_footer.html"));
@@ -28,14 +29,26 @@ function displaySettings() {
     //display group
     displayGroup($user, $tpl);
     
-    //display user
-    displayUser($user, $tpl);
+    $role = $user->getRole();
     
-    desplayDepartment($user, $tpl);
+    if ($role->getRoleID() == "1" || $role->getRoleID() == "2") {
+        //display user
+        displayUser($user, $tpl);
     
-	//display record
-	displayRecord($user, $tpl);
-	
+        desplayDepartment($user, $tpl);
+    
+	    //display record
+	    displayRecord($user, $tpl);
+        
+        $tpl->parse("SETTINGS_AUTHORITY", "authority");
+    } else {
+        $tpl->assign("SETTINGS_DEPARTMENT", "");
+        $tpl->assign("SETTINGS_USER", "");
+        $tpl->assign("SETTINGS_RECORD", "");
+        $tpl->assign("SETTINGS_AUTHORITY", "");
+    }
+        
+
     $tpl->assign("TITLE", "My Profile");
     $tpl->parse("WEB_HEADER", "web_header");
     $tpl->parse("HEAD_SCRIPT", "head_script");
@@ -155,8 +168,10 @@ function displayUser($user, $tpl){
         $roleUsers4 = $userDAO->getUsersByRoleID("4");
         if ($roleUsers4 === null)
             $tpl->assign("SETTINGS_USER_TR", "");
-        changRole($tpl, $roleUsers4, "4");
-        
+        changRole($tpl, $roleUsers4, "4");    
+    }
+    elseif ($roleID === "3" || $roleID === "4"){
+       $tpl->assign("SETTINGS_USER_TR", "");
     }
     $tpl->parse("SETTINGS_USER", "user");
 }
