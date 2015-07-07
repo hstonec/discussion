@@ -111,7 +111,7 @@ function submitPost(content, groupid, messagetype) {
                if (data.success) {
                    window.location.href = "index.php";
                } else {
-                   $("#commenterror").html(errorOriginHtml + " " + data.message)
+                   $("#commenterror").html(commentErrorHtml + " " + data.message)
                               .removeClass("hide");
                    $("#commentalert").click(closeCommentAlert);
                }
@@ -135,7 +135,37 @@ function submitLinkPost(event) {
     var groupid = $("#" + lastID).attr("value");
     var messagetype = "4";
     submitPost(content, groupid, messagetype)
-}    
+}
+    
+function submitFilePost(event) {
+    event.preventDefault();
+    var groupid = $("#" + lastID).attr("value");
+    var formData = new FormData(document.getElementById("commentfile"));
+    formData.append("groupid", groupid);
+    $.ajax({
+        url: 'ajax_upload_file.php',
+        type: 'post',
+        success: function(data) {
+            if (data.hasOwnProperty("url")) {
+               window.location.href = data.url;
+           }
+           if (data.success) {
+               window.location.href = "index.php";
+           } else {
+               
+               $("#commenterror").html(commentErrorHtml + " " + data.message)
+                          .removeClass("hide");
+               
+               $("#commentalert").click(closeCommentAlert);
+           }
+        },
+        data: formData,
+        dataType: "json",
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+}
 
 $(document).ready(function() {
     lastID = "listitem1";
@@ -164,11 +194,12 @@ $(document).ready(function() {
     $("#commenttab").children().click(switchTab);
     $("#commenttext").submit(submitTextPost);
     $("#commentlink").submit(submitLinkPost);
-    
+    $("#commentfile").submit(submitFilePost);
     $("#commentalert").click(closeCommentAlert);
     
     parentStack = [];
     checkedUser = [];
     errorOriginHtml = $("#newgrouperror").html();
+    commentErrorHtml = $("#commenterror").html();
 });
 </script>

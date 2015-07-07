@@ -718,6 +718,27 @@ class GroupMemberDAO {
         $this->db->send_sql($sql);
         return true;
     }
+    public function updateGroupMember($groupMember) {
+        if (gettype($groupMember) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "update t_group_member ".
+               "set accept_status = ".$this->db->escape_str($groupMember->getAcceptStatus())." ".
+               "where id_group = ".$this->db->escape_str($groupMember->getGroup()->getGroupID())." and id_user = ".$this->db->escape_str($groupMember->getUser()->getUserID());
+        $this->db->send_sql($sql);
+        return true;
+    }
+    public function deleteGroupMember($groupMember) {
+        if (gettype($groupMember) != "object") { 
+            echo "ERROR: Wrong argument type!"; 
+            exit; 
+        }
+        $sql = "delete from t_group_member ".
+            "where id_group = ".$this->db->escape_str($groupMember->getGroup()->getGroupID())." and id_user = ".$this->db->escape_str($groupMember->getUser()->getUserID());
+        $this->db->send_sql($sql);
+        return true;
+    }
 }
 class GroupMember {
     private $group;
@@ -746,11 +767,13 @@ class GroupMember {
 class RecordDAO {
     private $db;
     private $userDAO;
+    private $groupDAO;
     
     public function __construct() {
         $this->db = new database();
         $this->db->connect();
         $this->userDAO = new UserDAO();
+        $this->groupDAO = new GroupDAO();
     }
     public function __destruct() {
         $this->db->disconnect();
@@ -772,7 +795,29 @@ class RecordDAO {
                    $this->db->escape_str($record->getDisplayStatus()).")";
         $this->db->send_sql($sql);
         $record->setRecordID($this->db->insert_id());
+        $now = $this->getRecordByID($record->getRecordID());
+        $record->setTime($now->getTime());
         return true;
+    }
+    public function getRecordByID($recordID) {
+        $sql = "select id_record, id_group, id_user, message_type, content, time, display_status ".
+            "from t_record ".
+            "where id_record = ".$this->db->escape_str($recordID);
+        $this->db->send_sql($sql);
+        $row = $this->db->next_row();
+        if ($row === null)
+            return null;
+        $user = $this->userDAO->getUserByID($row["id_user"]);
+        $group = $this->groupDAO->getGroupByID($row["id_group"]);
+        return new Record(
+            $group,
+            $user,
+            $row["message_type"],
+            $row["content"],
+            $row["display_status"],
+            $row["time"],
+            $row["id_record"]
+        );
     }
     public function deleteRecordsByGroup($group) {
         if (gettype($group) != "object") { 
@@ -832,7 +877,7 @@ class RecordDAO {
             "message_type = ".$this->db->escape_str($record->getMessageType()).", ".
             "content = '".$this->db->escape_str($record->getContent())."', ".
             "time = '".$this->db->escape_str($record->getTime())."', ".
-            "display_status = ".$this->db->escape_str($record->getDisplayStatus()).
+            "display_status = ".$this->db->escape_str($record->getDisplayStatus())." ".
             "where id_record = ".$this->db->escape_str($record->getRecordID());
         $this->db->send_sql($sql);
         return true;

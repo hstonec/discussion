@@ -20,6 +20,7 @@ function displayIndex($userID) {
                        "comment" => "index/comment.html",
                        "link" => "index/link.html",
                        "image" => "index/image.html",
+                       "invitation" => "index/invitation.html",
                        "body" => "index/body.html",
                        "web_nav" => "web_nav.html",
                        "web_footer" => "web_footer.html"));
@@ -50,8 +51,11 @@ function displayIndex($userID) {
             
             $i++;
         }
-    } else
+    } else {
         $tpl->assign("INDEX_LIST_ITEM_LI", "");
+        $tpl->assign("INDEX_GROUP_HEADER", "");
+    }
+        
     
     //initial comments
     $recordDAO = new RecordDAO();
@@ -86,7 +90,17 @@ function displayIndex($userID) {
                     $con = $rec->getContent();
                     if ($type == "1")
                         $tpl->assign("INDEX_GROUP_COMMENT_CONTENT", htmlentities($con));
-                    if ($type == "4") {
+                    else if ($type == "2") {
+                        $tpl->assign("INDEX_CONTENT_IMGURL", $con);
+                        $tpl->parse("INDEX_GROUP_COMMENT_CONTENT", "image");
+                    } else if ($type == "3") {
+                        $tpl->assign("INDEX_GROUP_CONTENT_LINKURL", $con);
+                        $baseName = pathinfo($con, PATHINFO_BASENAME);
+                        $pos = strpos($baseName, "_");
+                        $oriName = substr($baseName, $pos + 1);
+                        $tpl->assign("INDEX_GROUP_CONTENT_LINKNAME", htmlentities($oriName));
+                        $tpl->parse("INDEX_GROUP_COMMENT_CONTENT", "link");
+                    } else if ($type == "4") {
                         $tpl->assign("INDEX_GROUP_CONTENT_LINKURL", "http://".rawurlencode($con));
                         $tpl->assign("INDEX_GROUP_CONTENT_LINKNAME", htmlentities($con));
                         $tpl->parse("INDEX_GROUP_COMMENT_CONTENT", "link");
@@ -121,6 +135,26 @@ function displayIndex($userID) {
             }
         }
     }
+    
+    
+    //initial annocement
+    $flag = false;
+    $gmArr = $gmDAO->getGroupMembersByUser($user);
+    if ($gmArr !== null)
+        foreach ($gmArr as $gmPend) {
+            if ($gmPend->getAcceptStatus() == "2") {
+                $gmGroup = $gmPend->getGroup();
+                $gmOwner = $gmGroup->getOwner();
+                $tpl->assign("INDEX_INVITATION_OWNER", $gmOwner->getFirstName()." ".$gmOwner->getLastName());
+                $tpl->assign("INDEX_INVITATION_GROUPNAME", $gmGroup->getGroupName());
+                $tpl->assign("INDEX_INVITATION_GROUPID", $gmGroup->getGroupID());
+                $tpl->parse("INDEX_INVITATION", ".invitation");
+                $flag = true;
+            }
+        }
+    
+    if ($flag === false)
+        $tpl->assign("INDEX_INVITATION", "");
     
     $tpl->assign("TITLE", "Home");
     $tpl->parse("WEB_HEADER", "web_header");

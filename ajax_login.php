@@ -23,11 +23,12 @@ function execLogin($username, $password) {
     $userDAO = new UserDAO();
     $user = $userDAO->getUserByUsername($username);
     
+    if ($user === null || !verifyPassword($password, $user->getPassword()))
+        return "There is no user account matching the Username and Password provided.";
+    
     if ($user->getRole()->getRoleID() == "4")
         return "This user was forbidden to login!";
     
-    if ($user === null || !verifyPassword($password, $user->getPassword()))
-        return "There is no user account matching the Username and Password provided.";
     login($user->getUserID());
     return true;
 }

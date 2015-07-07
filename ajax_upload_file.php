@@ -10,7 +10,8 @@ if (isset($_POST["groupid"]) && isset($_FILES["uploadfile"])) {
         sendAjaxResSuc();
     else
         sendAjaxResErr($result);
-}
+} else
+    sendAjaxResErr("Didn't choose file or file exceeds max size!");
 
 function uploadFile($userID, $groupID, $file) {
     $userDAO = new UserDAO();
