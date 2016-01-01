@@ -1,17 +1,17 @@
 <?php
 require_once("databaseClassMySQLi.php");
 
+$bluehost_database = new database();
+$bluehost_database->connect();
+
 class RoleDAO {
     private $db;
     
     public function __construct() {
-        $this->db = new database();
-        $this->db->connect();
+        global $bluehost_database;
+        $this->db = $bluehost_database;
     }
-    public function __destruct() {
-        $this->db->disconnect();
-    }
-    
+   
     public function insertRole($role) {
         if (gettype($role) != "object") { 
             echo "ERROR: Wrong argument type!"; 
@@ -78,11 +78,8 @@ class DepartmentDAO {
     private $db;
     
     public function __construct() {
-        $this->db = new database();
-        $this->db->connect();
-    }
-    public function __destruct() {
-        $this->db->disconnect();
+        global $bluehost_database;
+        $this->db = $bluehost_database;
     }
     
     public function insertDepartment($department) {
@@ -210,14 +207,11 @@ class UserDAO {
     private $departmentDAO;
     
     public function __construct() {
-        $this->db = new database();
-        $this->db->connect();
+        global $bluehost_database;
+        $this->db = $bluehost_database;
         
         $this->roleDAO = new RoleDAO();
         $this->departmentDAO = new DepartmentDAO();
-    }
-    public function __destruct() {
-        $this->db->disconnect();
     }
     
     public function insertUser($user) {
@@ -494,14 +488,11 @@ class GroupDAO {
     private $db;
     
     public function __construct() {
+        global $bluehost_database;
         $this->userDAO = new UserDAO();
-        $this->db = new database();
-        $this->db->connect();
+        $this->db = $bluehost_database;
     }
-    public function __destruct() {
-        $this->db->disconnect();
-    }
-    
+   
     public function insertGroup($group) {
         if (gettype($group) != "object") { 
             echo "ERROR: Wrong argument type!"; 
@@ -553,22 +544,22 @@ class GroupDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $owner = $this->userDAO->getUserByID($row["id_owner"]);
-        $groupsArr = array();
-        $groupsArr[] = new Group(
-            $owner,
-            $row["group_name"],
-            $row["activate_status"],
-            $row["id_group"]
-        );
+        
+        $allGroups = array();
+        $allGroups[] = $row;
         while ($row = $this->db->next_row()) {
+            $allGroups[] = $row;
+        }
+        
+        $groupsArr = array();
+        foreach ($allGroups as $row) {
             $owner = $this->userDAO->getUserByID($row["id_owner"]);
             $groupsArr[] = new Group(
-            $owner,
-            $row["group_name"],
-            $row["activate_status"],
-            $row["id_group"]
-        );
+                $owner,
+                $row["group_name"],
+                $row["activate_status"],
+                $row["id_group"]
+            );
         }
         return $groupsArr;
     }
@@ -584,15 +575,16 @@ class GroupDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $groupsArr = array();
-        $newOwner = $this->userDAO->getUserByID($row["id_owner"]);
-        $groupsArr[] = new Group(
-            $newOwner,
-            $row["group_name"],
-            $row["activate_status"],
-            $row["id_group"]
-        );
+        
+        $allOwners = array();
+        $allOwners[] = $row;
         while ($row = $this->db->next_row()) {
+            $allOwners[] = $row;
+        }
+        
+        
+        $groupsArr = array();
+        foreach ($allOwners as $row) {
             $newOwner = $this->userDAO->getUserByID($row["id_owner"]);
             $groupsArr[] = new Group(
             $newOwner,
@@ -658,13 +650,10 @@ class GroupMemberDAO {
     private $userDAO;
     
     public function __construct() {
-        $this->db = new database();
-        $this->db->connect();
+        global $bluehost_database;
+        $this->db = $bluehost_database;
         $this->groupDAO = new GroupDAO();
         $this->userDAO = new UserDAO();
-    }
-    public function __destruct() {
-        $this->db->disconnect();
     }
     
     public function insertGroupMember($groupMember) {
@@ -715,14 +704,15 @@ class GroupMemberDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $group = $this->groupDAO->getGroupByID($row["id_group"]);
-        $gmArr = array();
-        $gmArr[] = new GroupMember(
-            $group,
-            $user,
-            $row["accept_status"]
-        );
+        
+        $allUsers = array();
+        $allUsers[] = $row;
         while ($row = $this->db->next_row()) {
+            $allUsers[] = $row;
+        }
+        
+        $gmArr = array();
+        foreach ($allUsers as $row) {
             $group = $this->groupDAO->getGroupByID($row["id_group"]);
             $gmArr[] = new GroupMember(
                 $group,
@@ -745,14 +735,15 @@ class GroupMemberDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $user = $this->userDAO->getUserByID($row["id_user"]);
-        $gmArr = array();
-        $gmArr[] = new GroupMember(
-            $group,
-            $user,
-            $row["accept_status"]
-        );
+        
+        $allGroups = array();
+        $allGroups[] = $row;
         while ($row = $this->db->next_row()) {
+            $allGroups[] = $row;
+        }
+        
+        $gmArr = array();
+        foreach ($allGroups as $row) {
             $user = $this->userDAO->getUserByID($row["id_user"]);
             $gmArr[] = new GroupMember(
                 $group,
@@ -823,15 +814,12 @@ class RecordDAO {
     private $groupDAO;
     
     public function __construct() {
-        $this->db = new database();
-        $this->db->connect();
+        global $bluehost_database;
+        $this->db = $bluehost_database;
         $this->userDAO = new UserDAO();
         $this->groupDAO = new GroupDAO();
     }
-    public function __destruct() {
-        $this->db->disconnect();
-    }
-    
+   
     public function insertRecord($record) {
         if (gettype($record) != "object") { 
             echo "ERROR: Wrong argument type!"; 
@@ -894,18 +882,15 @@ class RecordDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $arr = array();
-        $user = $this->userDAO->getUserByID($row["id_user"]);
-        $arr[] = new Record(
-            $group,
-            $user,
-            $row["message_type"],
-            $row["content"],
-            $row["display_status"],
-            $row["time"],
-            $row["id_record"]
-        );
+        
+        $allGroups = array();
+        $allGroups[] = $row;
         while ($row = $this->db->next_row()) {
+            $allGroups[] = $row;
+        }
+        
+        $arr = array();
+        foreach ($allGroups as $row) {
             $user = $this->userDAO->getUserByID($row["id_user"]);
             $arr[] = new Record(
                 $group,
@@ -948,18 +933,15 @@ class RecordDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-        $arr = array();
-        $group = $this->groupDAO->getGroupByID($row["id_group"]);
-        $arr[] = new Record(
-            $group,
-            $user,
-            $row["message_type"],
-            $row["content"],
-            $row["display_status"],
-            $row["time"],
-            $row["id_record"]
-        );
+        
+        $allUsers = array();
+        $allUsers[] = $row;
         while ($row = $this->db->next_row()) {
+            $allUsers[] = $row;
+        }
+        
+        $arr = array();
+        foreach ($allUsers as $row) {
             $group = $this->groupDAO->getGroupByID($row["id_group"]);
             $arr[] = new Record(
                 $group,
@@ -989,19 +971,15 @@ class RecordDAO {
         $row = $this->db->next_row();
         if ($row === null)
             return null;
-		$group = $this->groupDAO->getGroupByID($row["id_group"]);
-        $user = $this->userDAO->getUserByID($row["id_user"]);
-        $recordsArr = array();
-        $recordsArr[] = new Record(
-			$group,
-            $user,
-            $row["message_type"],
-			$row["content"],
-			$row["display_status"],
-			$row["time"],
-            $row["id_record"]
-        );
+        
+        $allRecords = array();
+        $allRecords[] = $row;
         while ($row = $this->db->next_row()) {
+            $allRecords[] = $row;
+        }
+        
+        $recordsArr = array();
+        foreach ($allRecords as $row) {
 			$group = $this->groupDAO->getGroupByID($row["id_group"]);
             $user = $this->userDAO->getUserByID($row["id_user"]);
            $recordsArr[] = new Record(
